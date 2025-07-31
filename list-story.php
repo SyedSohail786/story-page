@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php include 'includes/header.php'; ?>
 
 <!-- LOGO and TOP ADS -->
-<div class="container-fluid text-center py-4 bg-light">
+<div class="container-fluid text-center py-4 bg-white">
   <div class="row align-items-center">
     <div class="col-md-2 d-none d-md-block">
       <img src="assets/images/ad-left.jpg" class="img-fluid rounded">
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #fd7e14;">
   <div class="container">
     <a class="navbar-brand fw-bold" href="index.php">StoryPortal</a>
     <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navMenu">
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="col-lg-8">
         <div class="card shadow-sm border-0">
           <div class="card-body p-4 p-md-5">
-            <h3 class="mb-4 text-center text-primary">Share Your Story</h3>
+            <h3 class="mb-4 text-center" style="color: #FF6B00;">Share Your Story</h3>
             <?php if (!empty($msg)) echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>$msg<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"; ?>
             
             <form method="POST" class="needs-validation" novalidate>
@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 
                 <div class="col-12 text-center">
-                  <button class="btn btn-primary btn-lg px-5" type="submit">Submit Story</button>
+                  <button class="btn btn-lg px-5 text-white" style="background-color: #FF6B00;" type="submit">Submit Story</button>
                 </div>
               </div>
             </form>
@@ -114,6 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   
   .navbar {
     margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(255, 107, 0, 0.3);
   }
   
   textarea.form-control {
@@ -122,6 +123,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   
   .card {
     border-radius: 10px;
+    border: none;
+  }
+  
+  .form-control:focus {
+    border-color: #fd7e14;
+    box-shadow: 0 0 0 0.25rem rgba(255, 107, 0, 0.25);
+  }
+  
+  .btn:hover {
+    background-color: #e67300 !important;
+  }
+  
+  .nav-link.active {
+    font-weight: bold;
+    text-decoration: underline;
+    text-underline-offset: 5px;
   }
 </style>
 
@@ -130,10 +147,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 (function () {
   'use strict'
   
-  // Fetch all the forms we want to apply custom Bootstrap validation styles to
   var forms = document.querySelectorAll('.needs-validation')
   
-  // Loop over them and prevent submission
   Array.prototype.slice.call(forms)
     .forEach(function (form) {
       form.addEventListener('submit', function (event) {
