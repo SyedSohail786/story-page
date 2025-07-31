@@ -1,6 +1,8 @@
 <?php
 require_once 'includes/db.php';
-$slides = $pdo->query("SELECT * FROM stories WHERE is_latest=1 ORDER BY created_at DESC LIMIT 5")->fetchAll();
+
+// Only show stories marked as banner
+$slides = $pdo->query("SELECT * FROM stories WHERE is_banner = 1 ORDER BY created_at DESC LIMIT 5")->fetchAll();
 $latest = $pdo->query("SELECT * FROM stories WHERE is_latest=1 ORDER BY created_at DESC LIMIT 12")->fetchAll();
 $popular = $pdo->query("SELECT * FROM stories WHERE is_popular=1 ORDER BY created_at DESC LIMIT 12")->fetchAll();
 ?>
@@ -46,19 +48,20 @@ $popular = $pdo->query("SELECT * FROM stories WHERE is_popular=1 ORDER BY create
   <div id="mainSlider" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
       <?php foreach ($slides as $i => $s): ?>
-      <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>">
-        <img src="<?= $s['thumbnail'] ?>" class="d-block w-100" style="height: 350px; object-fit: cover;">
-        <div class="carousel-caption bg-dark bg-opacity-50">
-          <h5><?= htmlspecialchars($s['title']) ?></h5>
+        <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>">
+          <img src="<?= $s['thumbnail'] ?>" class="d-block w-100" style="height: 420px; object-fit: cover; object-position: center;">
+          <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-3">
+            <h5><?= htmlspecialchars($s['title']) ?></h5>
+            <a href="story.php?id=<?= $s['id'] ?>" class="btn btn-light btn-sm mt-2">Read More</a>
+          </div>
         </div>
-      </div>
       <?php endforeach; ?>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#mainSlider" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon"></span>
+    <button class="carousel-control-prev" type="button" data-bs-target="#mainSlider" data-bs-slide="prev" style="width: 5%;">
+      <span class="carousel-control-prev-icon" style="background-color: rgba(0,0,0,0.6); border-radius: 50%; padding: 10px;"></span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#mainSlider" data-bs-slide="next">
-      <span class="carousel-control-next-icon"></span>
+    <button class="carousel-control-next" type="button" data-bs-target="#mainSlider" data-bs-slide="next" style="width: 5%;">
+      <span class="carousel-control-next-icon" style="background-color: rgba(0,0,0,0.6); border-radius: 50%; padding: 10px;"></span>
     </button>
   </div>
 </div>

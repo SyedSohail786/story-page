@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $content = $_POST['content'];
     $is_latest = isset($_POST['is_latest']) ? 1 : 0;
     $is_popular = isset($_POST['is_popular']) ? 1 : 0;
+    $is_banner = isset($_POST['is_banner']) ? 1 : 0;
 
     $thumbnail = $story['thumbnail'] ?? '';
     if (!empty($_FILES['thumbnail']['name'])) {
@@ -39,11 +40,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($editing) {
-        $stmt = $pdo->prepare("UPDATE stories SET title=?, slug=?, category_id=?, thumbnail=?, gallery=?, content=?, is_latest=?, is_popular=? WHERE id=?");
-        $stmt->execute([$title, $slug, $category_id, $thumbnail, json_encode($gallery), $content, $is_latest, $is_popular, $id]);
+        $stmt = $pdo->prepare("UPDATE stories SET title=?, slug=?, category_id=?, thumbnail=?, gallery=?, content=?, is_latest=?, is_popular=?, is_banner=? WHERE id=?");
+        $stmt->execute([$title, $slug, $category_id, $thumbnail, json_encode($gallery), $content, $is_latest, $is_popular, $is_banner, $id]);
     } else {
-        $stmt = $pdo->prepare("INSERT INTO stories (title, slug, category_id, thumbnail, gallery, content, is_latest, is_popular) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$title, $slug, $category_id, $thumbnail, json_encode($gallery), $content, $is_latest, $is_popular]);
+        $stmt = $pdo->prepare("INSERT INTO stories (title, slug, category_id, thumbnail, gallery, content, is_latest, is_popular, is_banner) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$title, $slug, $category_id, $thumbnail, json_encode($gallery), $content, $is_latest, $is_popular, $is_banner]);
     }
 
     header("Location: stories.php");
@@ -93,9 +94,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <label class="form-check-label">Mark as Latest</label>
   </div>
 
-  <div class="form-check mb-4">
+  <div class="form-check mb-2">
     <input class="form-check-input" type="checkbox" name="is_popular" <?= ($story['is_popular'] ?? false) ? 'checked' : '' ?>>
     <label class="form-check-label">Mark as Popular</label>
+  </div>
+
+  <div class="form-check mb-4">
+    <input class="form-check-input" type="checkbox" name="is_banner" <?= ($story['is_banner'] ?? false) ? 'checked' : '' ?>>
+    <label class="form-check-label">Show in Banner Slider</label>
   </div>
 
   <button class="btn btn-primary">Save Story</button>
