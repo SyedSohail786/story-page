@@ -6,25 +6,25 @@ $categories_result = $pdo->query("SELECT * FROM categories ORDER BY name");
 
 <footer class="bg-dark text-white py-5 mt-auto">
   <div class="container">
-    <div class="row">
+    <div class="row g-4">
       <!-- Quick Links -->
-      <div class="col-lg-3 col-md-6 mb-4">
-        <h5>Quick Links</h5>
+      <div class="col-lg-3 col-md-6">
+        <h5 class="text-orange mb-4">Quick Links</h5>
         <ul class="list-unstyled">
-          <li><a href="index.php" class="text-white-50">Home</a></li>
-          <li><a href="about.php" class="text-white-50">About</a></li>
-          <li><a href="contact.php" class="text-white-50">Contact</a></li>
-          <li><a href="list-story.php" class="text-white-50">Submit Story</a></li>
+          <li class="mb-2"><a href="index.php" class="text-white-50 hover-orange d-inline-block transition">Home</a></li>
+          <li class="mb-2"><a href="about.php" class="text-white-50 hover-orange d-inline-block transition">About</a></li>
+          <li class="mb-2"><a href="contact.php" class="text-white-50 hover-orange d-inline-block transition">Contact</a></li>
+          <li class="mb-2"><a href="list-story.php" class="text-white-50 hover-orange d-inline-block transition">Submit Story</a></li>
         </ul>
       </div>
 
       <!-- Categories -->
-      <div class="col-lg-3 col-md-6 mb-4">
-        <h5>Categories</h5>
+      <div class="col-lg-3 col-md-6">
+        <h5 class="text-orange mb-4">Categories</h5>
         <ul class="list-unstyled">
           <?php if ($categories_result): ?>
             <?php foreach ($categories_result as $category): ?>
-              <li><a href="category.php?id=<?= $category['id'] ?>" class="text-white-50"><?= htmlspecialchars($category['name']) ?></a></li>
+              <li class="mb-2"><a href="category.php?id=<?= $category['id'] ?>" class="text-white-50 hover-orange d-inline-block transition"><?= htmlspecialchars($category['name']) ?></a></li>
             <?php endforeach; ?>
           <?php else: ?>
             <li class="text-white-50">No categories available</li>
@@ -33,30 +33,76 @@ $categories_result = $pdo->query("SELECT * FROM categories ORDER BY name");
       </div>
 
       <!-- Social Media -->
-      <div class="col-lg-3 col-md-6 mb-4">
-        <h5>Social Media</h5>
-        <div class="social-links">
-          <a href="#" class="me-2"><img src="assets/images/facebook.png" alt="Facebook" width="24"></a>
-          <a href="#" class="me-2"><img src="assets/images/twitter.png" alt="Twitter" width="24"></a>
-          <a href="#" class="me-2"><img src="assets/images/instagram.png" alt="Instagram" width="24"></a>
-          <a href="#"><img src="assets/images/youtube.png" alt="YouTube" width="24"></a>
+      <div class="col-lg-3 col-md-6">
+        <h5 class="text-orange mb-4">Connect With Us</h5>
+        <div class="social-links d-flex gap-3 mb-4">
+          <a href="#" class="d-inline-block transition hover-scale">
+            <img src="assets/images/facebook.png" alt="Facebook" width="32" class="filter-orange">
+          </a>
+          <a href="#" class="d-inline-block transition hover-scale">
+            <img src="assets/images/twitter.png" alt="Twitter" width="32" class="filter-orange">
+          </a>
+          <a href="#" class="d-inline-block transition hover-scale">
+            <img src="assets/images/instagram.png" alt="Instagram" width="32" class="filter-orange">
+          </a>
+          <a href="#" class="d-inline-block transition hover-scale">
+            <img src="assets/images/youtube.png" alt="YouTube" width="32" class="filter-orange">
+          </a>
         </div>
+        <p class="text-white-50 small">Follow us for the latest stories and updates</p>
       </div>
 
-      <!-- Enquiry -->
-      <div class="col-lg-3 col-md-6 mb-4">
-        <h5>Enquiry</h5>
-        <p class="text-white-50">Have a story to share?</p>
-        <a href="list-story.php" class="btn btn-primary btn-sm">Submit Your Story</a>
+      <!-- Contact Us -->
+      <div class="col-lg-3 col-md-6">
+        <h5 class="text-orange mb-4">Contact Us</h5>
+        <div class="mb-3">
+          <p class="text-white-50 mb-4">Have questions or feedback? We'd love to hear from you!</p>
+          <a href="contact.php" class="btn btn-orange w-100 transition">Get In Touch</a>
+        </div>
+        <p class="text-white-50 small">Our team is ready to assist you</p>
       </div>
     </div>
 
-    <hr class="my-4">
-    <div class="text-center">
-      <p class="mb-0">&copy; <?= date('Y') ?> Digisnare. All Rights Reserved.</p>
+    <hr class="my-4 border-secondary">
+    <div class="text-center pt-3">
+      <p class="mb-0 text-white-50 small">&copy; <?= date('Y') ?> Digisnare. All Rights Reserved.</p>
     </div>
   </div>
 </footer>
+
+<!-- Add this to your CSS file or in a style tag -->
+<style>
+  .text-orange {
+    color: #fd7e14;
+  }
+  
+  .btn-orange {
+    background-color: #fd7e14;
+    color: white;
+    border: none;
+  }
+  
+  .btn-orange:hover {
+    background-color: #e67312;
+    color: white;
+  }
+  
+  .hover-orange:hover {
+    color: #fd7e14 !important;
+  }
+
+  .transition {
+    transition: all 0.3s ease;
+  }
+  
+  .hover-scale:hover {
+    transform: scale(1.1);
+  }
+  
+  .border-secondary {
+    border-color: #444 !important;
+  }
+</style>
 
 <script src="assets/js/bootstrap.bundle.min.js"></script>
 <script>

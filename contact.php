@@ -29,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 </div>
 
-<!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #fd7e14;">
   <div class="container">
     <a class="navbar-brand fw-bold" href="index.php">StoryPortal</a>
@@ -128,24 +127,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     background-color: #e67300 !important;
   }
 </style>
-
-<script>
-// Form validation
-(function () {
-  'use strict'
-  
-  var forms = document.querySelectorAll('.needs-validation')
-  
-  Array.prototype.slice.call(forms)
-    .forEach(function (form) {
-      form.addEventListener('submit', function (event) {
-        if (!form.checkValidity()) {
-          event.preventDefault()
-          event.stopPropagation()
-        }
-        
-        form.classList.add('was-validated')
-      }, false)
-    })
-})()
-</script>

@@ -25,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 </div>
 
-<!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #fd7e14;">
   <div class="container">
     <a class="navbar-brand fw-bold" href="index.php">StoryPortal</a>
@@ -37,8 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="category.php">Category</a></li>
         <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
-        <li class="nav-item"><a class="nav-link active" href="list-story.php">List Your Story</a></li>
-        <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="list-story.php">List Your Story</a></li>
+        <li class="nav-item"><a class="nav-link active" href="contact.php">Contact</a></li>
       </ul>
     </div>
   </div>
@@ -69,8 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 
                 <div class="col-12 mb-3">
-                  <label for="phone" class="form-label">Phone Number (Optional)</label>
-                  <input type="tel" name="phone" class="form-control" id="phone" placeholder="+1 (123) 456-7890">
+                  <label for="phone" class="form-label">Phone Number</label>
+                  <input type="tel" name="phone" class="form-control" id="phone" placeholder="+91 XXXXXXXXXX">
                 </div>
                 
                 <div class="col-12 mb-3">

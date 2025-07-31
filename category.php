@@ -36,7 +36,6 @@ $stories = $stmt->fetchAll();
   </div>
 </div>
 
-<!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #fd7e14;">
   <div class="container">
     <a class="navbar-brand fw-bold" href="index.php">StoryPortal</a>
@@ -46,10 +45,10 @@ $stories = $stmt->fetchAll();
     <div class="collapse navbar-collapse" id="navMenu">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-        <li class="nav-item"><a class="nav-link active" href="category.php">Category</a></li>
+        <li class="nav-item"><a class="nav-link" href="category.php">Category</a></li>
         <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
         <li class="nav-item"><a class="nav-link" href="list-story.php">List Your Story</a></li>
-        <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
+        <li class="nav-item"><a class="nav-link active" href="contact.php">Contact</a></li>
       </ul>
     </div>
   </div>

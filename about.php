@@ -26,9 +26,9 @@
       <ul class="navbar-nav ms-auto">
         <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="category.php">Category</a></li>
-        <li class="nav-item"><a class="nav-link active" href="about.php">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
         <li class="nav-item"><a class="nav-link" href="list-story.php">List Your Story</a></li>
-        <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
+        <li class="nav-item"><a class="nav-link active" href="contact.php">Contact</a></li>
       </ul>
     </div>
   </div>
