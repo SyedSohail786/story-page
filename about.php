@@ -35,9 +35,9 @@
 </nav>
 
 <!-- Full-height About Section -->
-<div class="container-fluid d-flex flex-column flex-grow-1 bg-light">
-  <div class="container my-5 py-4 flex-grow-1">
-    <div class="row justify-content-center">
+<div class="container-fluid d-flex flex-column min-vh-100">
+  <div class="container py-5 flex-grow-1">
+    <div class="row justify-content-center my-auto"> <!-- Added my-auto here -->
       <div class="col-lg-8">
         <div class="card shadow-sm border-0">
           <div class="card-body p-4 p-md-5">
@@ -76,8 +76,8 @@
     background-color: #f8f9fa;
   }
   
-  .container-fluid.flex-grow-1 {
-    flex: 1 0 auto;
+  .min-vh-100 {
+    min-height: 100vh;
   }
   
   .navbar {
@@ -87,6 +87,7 @@
   
   .card {
     border-radius: 10px;
+    border: none;
   }
   
   .nav-link.active {
@@ -97,5 +98,10 @@
   
   .btn:hover {
     background-color: #e67300 !important;
+  }
+  
+  .my-auto {
+    margin-top: auto;
+    margin-bottom: auto;
   }
 </style>
