@@ -69,9 +69,9 @@ $popular = $pdo->query("SELECT * FROM stories WHERE is_popular=1 ORDER BY create
 <!-- LATEST STORIES -->
 <div class="container my-5">
   <h4 class="mb-3">Latest Stories</h4>
-  <div class="row flex-nowrap overflow-auto">
-    <?php foreach ($latest as $s): ?>
-      <div class="col-md-3 col-10 mb-3">
+  <div class="row" id="latestStories">
+    <?php foreach ($latest as $i => $s): ?>
+      <div class="col-md-3 mb-3 latest-card <?= $i >= 8 ? 'd-none' : '' ?>">
         <div class="card h-100">
           <img src="<?= $s['thumbnail'] ?>" class="card-img-top" style="height:150px; object-fit:cover;">
           <div class="card-body">
@@ -82,14 +82,20 @@ $popular = $pdo->query("SELECT * FROM stories WHERE is_popular=1 ORDER BY create
       </div>
     <?php endforeach; ?>
   </div>
+  <?php if (count($latest) > 8): ?>
+    <div class="text-center">
+      <button class="btn btn-primary btn-sm" id="loadMoreLatest">Load More</button>
+    </div>
+  <?php endif; ?>
 </div>
+
 
 <!-- POPULAR STORIES -->
 <div class="container my-5">
   <h4 class="mb-3">Popular Stories</h4>
-  <div class="row flex-nowrap overflow-auto">
-    <?php foreach ($popular as $s): ?>
-      <div class="col-md-3 col-10 mb-3">
+  <div class="row" id="popularStories">
+    <?php foreach ($popular as $i => $s): ?>
+      <div class="col-md-3 mb-3 popular-card <?= $i >= 8 ? 'd-none' : '' ?>">
         <div class="card h-100">
           <img src="<?= $s['thumbnail'] ?>" class="card-img-top" style="height:150px; object-fit:cover;">
           <div class="card-body">
@@ -100,7 +106,13 @@ $popular = $pdo->query("SELECT * FROM stories WHERE is_popular=1 ORDER BY create
       </div>
     <?php endforeach; ?>
   </div>
+  <?php if (count($popular) > 8): ?>
+    <div class="text-center">
+      <button class="btn btn-secondary btn-sm" id="loadMorePopular">Load More</button>
+    </div>
+  <?php endif; ?>
 </div>
+
 
 <!-- AD BANNER -->
 <div class="container text-center my-5">

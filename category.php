@@ -19,6 +19,40 @@ if ($cat_id) {
 $stories = $stmt->fetchAll();
 ?>
 <?php include 'includes/header.php'; ?>
+
+<!-- LOGO and TOP ADS -->
+<div class="container-fluid text-center py-4">
+  <div class="row align-items-center">
+    <div class="col-md-2 d-none d-md-block">
+      <img src="assets/images/ad-left.jpg" class="img-fluid">
+    </div>
+    <div class="col-md-8">
+      <img src="assets/images/logo.png" class="img-fluid" style="max-height: 80px;">
+    </div>
+    <div class="col-md-2 d-none d-md-block">
+      <img src="assets/images/ad-right.jpg" class="img-fluid">
+    </div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="#">StoryPortal</a>
+    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="category.php">Category</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="list-story.php">List Your Story</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
 <div class="container my-5">
   <h3><?= isset($category) ? 'Category: ' . htmlspecialchars($category['name']) : 'All Stories' ?></h3>
 

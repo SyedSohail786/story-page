@@ -8,6 +8,10 @@ if (!$story) exit('Story not found.');
 ?>
 <?php include 'includes/header.php'; ?>
 <div class="container my-5">
+     <div class="text-left mt-4">
+  <a href="index.php" class="btn btn-secondary">← Back to Home</a>
+</div>
+
   <h2><?= htmlspecialchars($story['title']) ?></h2>
   <img src="<?= $story['thumbnail'] ?>" class="img-fluid mb-3" style="max-height: 300px;">
   <div><?= nl2br($story['content']) ?></div>
@@ -21,4 +25,5 @@ if (!$story) exit('Story not found.');
     </div>
   <?php endif; ?>
 </div>
+
 <?php include 'includes/footer.php'; ?>
