@@ -1,19 +1,20 @@
 <?php
 require_once 'includes/db.php';
-$cat_id = $_GET['id'] ?? null;
+$cat_slug = $_GET['cat'] ?? null;
 $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
 
-if ($cat_id) {
-  $cat = $pdo->prepare("SELECT * FROM categories WHERE id = ?");
-  $cat->execute([$cat_id]);
+if ($cat_slug) {
+  $cat = $pdo->prepare("SELECT * FROM categories WHERE slug = ?");
+  $cat->execute([$cat_slug]);
   $category = $cat->fetch();
   if (!$category) {
     echo "<div class='d-flex justify-content-center align-items-center flex-grow-1'><div class='alert alert-danger w-50 text-center'>Category not found.</div></div>";
     include 'includes/footer.php';
     exit;
   }
-  $stmt = $pdo->prepare("SELECT * FROM stories WHERE category_id = ? ORDER BY created_at DESC");
-  $stmt->execute([$cat_id]);
+$stmt = $pdo->prepare("SELECT * FROM stories WHERE category_id = ? ORDER BY created_at DESC");
+$stmt->execute([$category['id']]);
+
 } else {
   $stmt = $pdo->query("SELECT * FROM stories ORDER BY created_at DESC");
 }
@@ -137,7 +138,7 @@ $stories = $stmt->fetchAll();
               <li><hr class="dropdown-divider"></li>
               <?php foreach ($categories as $cat): ?>
                 <li>
-                  <a class="dropdown-item <?= ($cat['id'] == $cat_id) ? 'active' : '' ?>" href="category.php?id=<?= $cat['id'] ?>">
+                  <a class="dropdown-item <?= ($cat['slug'] == $cat_slug) ? 'active' : '' ?>" href="category.php?cat=<?= $cat['slug'] ?>">
                     <?= htmlspecialchars($cat['name']) ?>
                   </a>
                 </li>

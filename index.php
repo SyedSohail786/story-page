@@ -5,6 +5,8 @@ require_once 'includes/db.php';
 $slides = $pdo->query("SELECT * FROM stories WHERE is_banner = 1 ORDER BY created_at DESC LIMIT 5")->fetchAll();
 $latest = $pdo->query("SELECT * FROM stories WHERE is_latest=1 ORDER BY created_at DESC LIMIT 12")->fetchAll();
 $popular = $pdo->query("SELECT * FROM stories WHERE is_popular=1 ORDER BY created_at DESC LIMIT 12")->fetchAll();
+$categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
+
 ?>
 
 <?php include 'includes/header.php'; ?>
@@ -159,6 +161,27 @@ $popular = $pdo->query("SELECT * FROM stories WHERE is_popular=1 ORDER BY create
     </div>
   </div>
 
+  <!-- CATEGORIES SECTION -->
+<div class="container my-5 py-4">
+  <h2 class="mb-4 text-orange text-center">Browse by Category</h2>
+  <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-4 text-center">
+    <?php foreach ($categories as $cat): ?>
+      <div class="col">
+        <a href="category.php?cat=<?= urlencode($cat['slug']) ?>" class="text-decoration-none text-dark d-block">
+          <div class="bg-white border rounded shadow-sm p-3 h-100 d-flex flex-column align-items-center justify-content-center category-tile">
+            <?php if (!empty($cat['icon'])): ?>
+              <img src="uploads/icons/<?= htmlspecialchars($cat['icon']) ?>" class="mb-2" style="height: 60px;">
+            <?php else: ?>
+              <div class="mb-2" style="height: 60px;"></div>
+            <?php endif; ?>
+            <div class="fw-semibold"><?= htmlspecialchars($cat['name']) ?></div>
+          </div>
+        </a>
+      </div>
+    <?php endforeach; ?>
+  </div>
+</div>
+
   <!-- LATEST STORIES -->
   <div class="container my-5 py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -300,6 +323,11 @@ $popular = $pdo->query("SELECT * FROM stories WHERE is_popular=1 ORDER BY create
   .navbar {
     transition: all 0.3s ease;
   }
+  .category-tile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
   
   .navbar.scrolled {
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
