@@ -53,9 +53,13 @@ if (!isset($_SESSION['admin_id'])) {
         <li class="nav-item">
             <a href="messages.php" class="nav-link text-white <?= basename($_SERVER['PHP_SELF']) === 'messages.php' ? 'active' : '' ?>">
                 <i class="bi bi-envelope me-2"></i>Messages
-                <span class="badge bg-danger rounded-pill ms-2">3</span>
             </a>
         </li>
+        <li class="nav-item">
+    <a href="services.php" class="nav-link text-white <?= basename($_SERVER['PHP_SELF']) === 'services.php' ? 'active' : '' ?>">
+        <i class="bi bi-gear-wide-connected me-2"></i>Services
+    </a>
+</li>
     </ul>
     
     <hr class="my-2 bg-secondary">
