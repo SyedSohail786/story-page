@@ -1,10 +1,14 @@
 <?php
 require_once 'includes/db.php';
-$id = $_GET['id'] ?? 0;
-$stmt = $pdo->prepare("SELECT * FROM stories WHERE id = ?");
-$stmt->execute([$id]);
+$slug = $_GET['slug'] ?? '';
+$stmt = $pdo->prepare("SELECT * FROM stories WHERE slug = ?");
+$stmt->execute([$slug]);
 $story = $stmt->fetch();
-if (!$story) exit('Story not found.');
+
+if (!$story) {
+    exit('Story not found.');
+}
+
 ?>
 <?php include 'includes/header.php'; ?>
 

@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteBase /storypage/
+
+RewriteRule ^story/([^/]+)$ story.php?slug=$1 [L]

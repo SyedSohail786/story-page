@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+  <base href="/storypage/">
 <head>
   <title>Story Portal</title>
   <link href="assets/css/bootstrap.min.css" rel="stylesheet">

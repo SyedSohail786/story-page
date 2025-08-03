@@ -111,12 +111,12 @@ $popular = $pdo->query("SELECT * FROM stories WHERE is_popular=1 ORDER BY create
       <div class="carousel-inner rounded-4">
         <?php foreach ($slides as $i => $s): ?>
           <div class="carousel-item <?= $i === 0 ? 'active' : '' ?> position-relative" >
-            <img src="<?= $s['thumbnail'] ?>" class="d-block w-100" style="height: 500px; object-fit: cover; object-position: center;" >
+            <img src="<?= $s['thumbnail'] ?>" class="d-block w-100 position-relative" style="height: 500px; object-fit: cover; object-position: center;" >
             <div class="carousel-caption d-flex flex-column justify-content-center h-100 text-start p-4">
-              <div class="container py-3 px-5 rounded-2" style="background: rgba(0, 0, 0, 0.3);">
+              <div class="container py-2 px-5 rounded-2 position-absolute bottom-0" style="background: rgba(0, 0, 0, 0.2);">
                 <h2 class="display-5 fw-bold mb-3"><?= htmlspecialchars($s['title']) ?></h2>
                 <p class="d-none d-md-block mb-4"><?= htmlspecialchars(substr(strip_tags($s['content']), 0, 150)) ?>...</p>
-                <a href="story.php?id=<?= $s['id'] ?>" class="btn btn-orange btn-lg px-4 align-self-start">
+                <a href="story/<?= urlencode($s['slug']) ?>" class="btn btn-orange btn-lg px-4 align-self-start">
                   Read Story
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-2" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
@@ -175,7 +175,7 @@ $popular = $pdo->query("SELECT * FROM stories WHERE is_popular=1 ORDER BY create
               <p class="card-text text-truncate-3"><?= htmlspecialchars(substr(strip_tags($s['content']), 0, 100)) ?>...</p>
             </div>
             <div class="card-footer bg-transparent border-0 pt-0">
-              <a href="story.php?id=<?= $s['id'] ?>" class="btn btn-sm btn-orange w-100">
+              <a href="story/<?= urlencode($s['slug']) ?>" class="btn btn-sm btn-orange w-100">
                 Read Story
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-1" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
@@ -234,7 +234,7 @@ $popular = $pdo->query("SELECT * FROM stories WHERE is_popular=1 ORDER BY create
               <p class="card-text text-truncate-3"><?= htmlspecialchars(substr(strip_tags($s['content']), 0, 100)) ?>...</p>
             </div>
             <div class="card-footer bg-transparent border-0 pt-0">
-              <a href="story.php?id=<?= $s['id'] ?>" class="btn btn-sm btn-orange w-100">
+              <a href="story/<?= urlencode($s['slug']) ?>" class="btn btn-sm btn-orange w-100">
                 Read Story
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-1" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
@@ -408,7 +408,7 @@ $popular = $pdo->query("SELECT * FROM stories WHERE is_popular=1 ORDER BY create
   }
   
   .carousel-indicators button.active {
-    background-color: white;
+    background-color: #fd7e14;
   }
   
   @media (max-width: 992px) {

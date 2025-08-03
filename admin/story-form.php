@@ -17,7 +17,15 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'];
-    $slug = strtolower(preg_replace('/[^a-z0-9]+/', '-', $title));
+    function generateSlug($title) {
+    $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $title); // Convert accents to ASCII
+    $slug = strtolower($slug);                         // Lowercase
+    $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);  // Replace non-alphanum with -
+    return trim($slug, '-');                           // Trim hyphens
+}
+
+$slug = generateSlug($title);
+
     $category_id = $_POST['category_id'];
     $content = $_POST['content'];
     $is_latest = isset($_POST['is_latest']) ? 1 : 0;
