@@ -10,6 +10,23 @@ if (!$story) {
 }
 
 ?>
+
+<?php
+$metaTitle = $story['seo_title'] ?: $story['title'];
+$metaDesc = $story['meta_description'] ?: substr(strip_tags($story['content']), 0, 150);
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><?= htmlspecialchars($metaTitle) ?></title>
+  <meta name="description" content="<?= htmlspecialchars($metaDesc) ?>">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
 <?php include 'includes/header.php'; ?>
 
 <!-- LOGO and TOP ADS -->
@@ -144,7 +161,17 @@ if (!$story) {
       <?php endforeach; ?>
     </div>
   <?php endif; ?>
+
+  <div class="mt-5 p-4 border rounded bg-white">
+  <h4 class="mb-3">Submitted By</h4>
+  <p><strong>Name:</strong> <?= htmlspecialchars($story['user_name']) ?></p>
+  <p><strong>Contact:</strong> <?= htmlspecialchars($story['user_contact']) ?></p>
+  <p><strong>Address:</strong> <?= nl2br(htmlspecialchars($story['user_address'])) ?></p>
 </div>
+</div>
+
+
+
 
 <?php include 'includes/footer.php'; ?>
 

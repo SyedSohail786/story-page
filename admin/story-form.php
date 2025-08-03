@@ -17,20 +17,27 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'];
-    function generateSlug($title) {
-    $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $title); // Convert accents to ASCII
-    $slug = strtolower($slug);                         // Lowercase
-    $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);  // Replace non-alphanum with -
-    return trim($slug, '-');                           // Trim hyphens
-}
-
-$slug = generateSlug($title);
-
     $category_id = $_POST['category_id'];
     $content = $_POST['content'];
     $is_latest = isset($_POST['is_latest']) ? 1 : 0;
     $is_popular = isset($_POST['is_popular']) ? 1 : 0;
     $is_banner = isset($_POST['is_banner']) ? 1 : 0;
+
+    $user_name = $_POST['user_name'];
+    $user_contact = $_POST['user_contact'];
+    $user_address = $_POST['user_address'];
+
+    $seo_title = $_POST['seo_title'];
+    $meta_description = $_POST['meta_description'];
+
+    function generateSlug($title) {
+        $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $title);
+        $slug = strtolower($slug);
+        $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+        return trim($slug, '-');
+    }
+
+    $slug = generateSlug($title);
 
     $thumbnail = $story['thumbnail'] ?? '';
     if (!empty($_FILES['thumbnail']['name'])) {
@@ -48,11 +55,23 @@ $slug = generateSlug($title);
     }
 
     if ($editing) {
-        $stmt = $pdo->prepare("UPDATE stories SET title=?, slug=?, category_id=?, thumbnail=?, gallery=?, content=?, is_latest=?, is_popular=?, is_banner=? WHERE id=?");
-        $stmt->execute([$title, $slug, $category_id, $thumbnail, json_encode($gallery), $content, $is_latest, $is_popular, $is_banner, $id]);
+        $stmt = $pdo->prepare("UPDATE stories SET title=?, slug=?, category_id=?, thumbnail=?, gallery=?, content=?, is_latest=?, is_popular=?, is_banner=?, user_name=?, user_contact=?, user_address=?, seo_title=?, meta_description=? WHERE id=?");
+        $stmt->execute([
+            $title, $slug, $category_id, $thumbnail, json_encode($gallery), $content,
+            $is_latest, $is_popular, $is_banner,
+            $user_name, $user_contact, $user_address,
+            $seo_title, $meta_description,
+            $id
+        ]);
     } else {
-        $stmt = $pdo->prepare("INSERT INTO stories (title, slug, category_id, thumbnail, gallery, content, is_latest, is_popular, is_banner) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$title, $slug, $category_id, $thumbnail, json_encode($gallery), $content, $is_latest, $is_popular, $is_banner]);
+        $stmt = $pdo->prepare("INSERT INTO stories (title, slug, category_id, thumbnail, gallery, content, is_latest, is_popular, is_banner, user_name, user_contact, user_address, seo_title, meta_description)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([
+            $title, $slug, $category_id, $thumbnail, json_encode($gallery), $content,
+            $is_latest, $is_popular, $is_banner,
+            $user_name, $user_contact, $user_address,
+            $seo_title, $meta_description
+        ]);
     }
 
     header("Location: stories.php");
@@ -63,6 +82,7 @@ $slug = generateSlug($title);
 <h2 class="mb-4"><?= $editing ? 'Edit' : 'Add New' ?> Story</h2>
 
 <form method="POST" enctype="multipart/form-data" class="col-lg-8">
+
   <div class="mb-3">
     <label class="form-label">Title</label>
     <input name="title" class="form-control" required value="<?= htmlspecialchars($story['title'] ?? '') ?>">
@@ -110,6 +130,31 @@ $slug = generateSlug($title);
   <div class="form-check mb-4">
     <input class="form-check-input" type="checkbox" name="is_banner" <?= ($story['is_banner'] ?? false) ? 'checked' : '' ?>>
     <label class="form-check-label">Show in Banner Slider</label>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">User Name</label>
+    <input name="user_name" class="form-control" required value="<?= htmlspecialchars($story['user_name'] ?? '') ?>">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">User Contact</label>
+    <input name="user_contact" class="form-control" required value="<?= htmlspecialchars($story['user_contact'] ?? '') ?>">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">User Address</label>
+    <textarea name="user_address" class="form-control" rows="2"><?= htmlspecialchars($story['user_address'] ?? '') ?></textarea>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">SEO Title</label>
+    <input name="seo_title" class="form-control" maxlength="255" value="<?= htmlspecialchars($story['seo_title'] ?? '') ?>">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Meta Description</label>
+    <textarea name="meta_description" class="form-control" maxlength="255" rows="3"><?= htmlspecialchars($story['meta_description'] ?? '') ?></textarea>
   </div>
 
   <button class="btn btn-primary">Save Story</button>
