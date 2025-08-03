@@ -166,7 +166,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
   <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-4">
     <?php foreach ($categories as $cat): ?>
       <div class="col">
-        <a href="category.php?cat=<?= urlencode($cat['slug']) ?>" class="text-decoration-none d-block">
+        <a href="<?= urlencode($cat['slug']) ?>" class="text-decoration-none d-block">
           <div class="position-relative overflow-hidden rounded shadow-sm category-tile" style="height: 150px;">
             <img src="uploads/icons/<?= htmlspecialchars($cat['icon']) ?>" 
                  class="w-100 h-100 object-fit-cover" 

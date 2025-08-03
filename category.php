@@ -138,7 +138,7 @@ $stories = $stmt->fetchAll();
               <li><hr class="dropdown-divider"></li>
               <?php foreach ($categories as $cat): ?>
                 <li>
-                  <a class="dropdown-item <?= ($cat['slug'] == $cat_slug) ? 'active' : '' ?>" href="category.php?cat=<?= $cat['slug'] ?>">
+                  <a class="dropdown-item <?= ($cat['slug'] == $cat_slug) ? 'active' : '' ?>" href="<?= $cat['slug'] ?>">
                     <?= htmlspecialchars($cat['name']) ?>
                   </a>
                 </li>
