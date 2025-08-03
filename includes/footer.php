@@ -126,5 +126,23 @@ $categories_result = $pdo->query("SELECT * FROM categories ORDER BY name");
     }
   });
 </script>
+<!-- Image Zoom Modal -->
+<div class="modal fade" id="zoomModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bg-transparent border-0">
+      <img id="zoomedImage" class="img-fluid rounded shadow">
+    </div>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('.gallery-zoomable').forEach(img => {
+    img.addEventListener('click', function () {
+      document.getElementById('zoomedImage').src = this.src;
+      const zoomModal = new bootstrap.Modal(document.getElementById('zoomModal'));
+      zoomModal.show();
+    });
+  });
+</script>
+
 </body>
 </html>

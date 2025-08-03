@@ -120,7 +120,7 @@ if (!$story) {
     <img src="<?= $story['thumbnail'] ?>" class="img-fluid mb-4 rounded" style="max-height: 400px; width: 100%; object-fit: cover;">
   <?php endif; ?>
   
-  <div class="story-content" style="line-height: 1.8; font-size: 1.1rem;">
+  <div class="story-content">
     <?= nl2br(htmlspecialchars($story['content'])) ?>
   </div>
   
@@ -129,7 +129,9 @@ if (!$story) {
       <h4 class="mb-3">Gallery</h4>
       <?php foreach ($gallery as $img): ?>
         <div class="col-md-3 mb-4">
-          <img src="<?= $img ?>" class="img-fluid rounded shadow-sm" style="height: 200px; width: 100%; object-fit: cover;">
+          <!-- <img src="<?= $img ?>" class="img-fluid rounded shadow-sm" style="height: 200px; width: 100%; object-fit: cover;"> -->
+          <img src="<?= $img ?>" class="img-fluid rounded shadow-sm gallery-zoomable" style="cursor: zoom-in; height: 200px; width: 100%; object-fit: cover;">
+
         </div>
       <?php endforeach; ?>
     </div>
@@ -188,8 +190,10 @@ if (!$story) {
   }
   
   .story-content {
-    white-space: pre-wrap;
-    word-wrap: break-word;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  line-height: 1.5;
+  font-size: 1.1rem;
   }
   
   .back-button {
