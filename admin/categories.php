@@ -3,37 +3,41 @@ $pageTitle = "Manage Categories";
 require_once 'includes/layout.php';
 require_once '../includes/db.php';
 
+// Load category to edit (if any)
+$editCategory = null;
+if (isset($_GET['edit'])) {
+    $stmt = $pdo->prepare("SELECT * FROM categories WHERE id = ?");
+    $stmt->execute([$_GET['edit']]);
+    $editCategory = $stmt->fetch();
+}
+
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'];
+    $name = trim($_POST['name'] ?? '');
     $slug = strtolower(preg_replace('/[^a-z0-9]+/', '-', $name));
-    if (!empty($_POST['id'])) {
-        $stmt = $pdo->prepare("UPDATE categories SET name = ?, slug = ? WHERE id = ?");
-        $stmt->execute([$name, $slug, $_POST['id']]);
-    } else {
-        $stmt = $pdo->prepare("INSERT INTO categories (name, slug) VALUES (?, ?)");
-        $stmt->execute([$name, $slug]);
+
+    // Handle icon upload
+    $iconFile = $_FILES['icon'] ?? null;
+    $iconName = $editCategory['icon'] ?? null;
+
+    if ($iconFile && $iconFile['error'] === UPLOAD_ERR_OK) {
+        $ext = pathinfo($iconFile['name'], PATHINFO_EXTENSION);
+        $iconName = uniqid() . '.' . $ext;
+        move_uploaded_file($iconFile['tmp_name'], "../uploads/icons/" . $iconName);
     }
+
+    if (!empty($_POST['id'])) {
+        // Update
+        $stmt = $pdo->prepare("UPDATE categories SET name = ?, slug = ?, icon = ? WHERE id = ?");
+        $stmt->execute([$name, $slug, $iconName, $_POST['id']]);
+    } else {
+        // Insert
+        $stmt = $pdo->prepare("INSERT INTO categories (name, slug, icon) VALUES (?, ?, ?)");
+        $stmt->execute([$name, $slug, $iconName]);
+    }
+
     header("Location: categories.php");
     exit;
-}
-
-//handle icon upload
-$iconFile = $_FILES['icon'] ?? null;
-$iconName = $editCategory['icon'] ?? null;
-
-if ($iconFile && $iconFile['error'] === UPLOAD_ERR_OK) {
-    $ext = pathinfo($iconFile['name'], PATHINFO_EXTENSION);
-    $iconName = uniqid() . '.' . $ext;
-    move_uploaded_file($iconFile['tmp_name'], "../uploads/icons/" . $iconName);
-}
-
-if (!empty($_POST['id'])) {
-    $stmt = $pdo->prepare("UPDATE categories SET name = ?, slug = ?, icon = ? WHERE id = ?");
-    $stmt->execute([$name, $slug, $iconName, $_POST['id']]);
-} else {
-    $stmt = $pdo->prepare("INSERT INTO categories (name, slug, icon) VALUES (?, ?, ?)");
-    $stmt->execute([$name, $slug, $iconName]);
 }
 
 // Handle delete
@@ -46,32 +50,27 @@ if (isset($_GET['delete'])) {
 
 // Fetch categories
 $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
-
-// Load category to edit (if any)
-$editCategory = null;
-if (isset($_GET['edit'])) {
-    $stmt = $pdo->prepare("SELECT * FROM categories WHERE id = ?");
-    $stmt->execute([$_GET['edit']]);
-    $editCategory = $stmt->fetch();
-}
 ?>
 
 <h2 class="mb-4">Manage Categories</h2>
 
-  <form method="POST" class="mb-4" enctype="multipart/form-data">
+<form method="POST" class="mb-4" enctype="multipart/form-data">
   <input type="hidden" name="id" value="<?= $editCategory['id'] ?? '' ?>">
+
   <div class="input-group mb-2">
-  <input name="name" class="form-control" placeholder="Category Name" required
-         value="<?= htmlspecialchars($editCategory['name'] ?? '') ?>">
-</div>
-<div class="mb-3">
-  <label>Category Icon (PNG/JPG)</label>
-  <input type="file" name="icon" class="form-control">
-  <?php if (!empty($editCategory['icon'])): ?>
-    <img src="../uploads/icons/<?= $editCategory['icon'] ?>" style="height: 40px;" class="mt-2">
-  <?php endif; ?>
-</div>
-<button class="btn btn-primary">Save</button>
+    <input name="name" class="form-control" placeholder="Category Name" required
+           value="<?= htmlspecialchars($editCategory['name'] ?? '') ?>">
+  </div>
+
+  <div class="mb-3">
+    <label>Category Icon (PNG/JPG)</label>
+    <input type="file" name="icon" class="form-control">
+    <?php if (!empty($editCategory['icon'])): ?>
+      <img src="../uploads/icons/<?= $editCategory['icon'] ?>" style="height: 40px;" class="mt-2">
+    <?php endif; ?>
+  </div>
+
+  <button class="btn btn-primary">Save</button>
 </form>
 
 <div class="table-responsive">

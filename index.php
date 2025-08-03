@@ -161,26 +161,26 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
     </div>
   </div>
 
-  <!-- CATEGORIES SECTION -->
 <div class="container my-5 py-4">
   <h2 class="mb-4 text-orange text-center">Browse by Category</h2>
-  <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-4 text-center">
+  <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-4">
     <?php foreach ($categories as $cat): ?>
       <div class="col">
-        <a href="category.php?cat=<?= urlencode($cat['slug']) ?>" class="text-decoration-none text-dark d-block">
-          <div class="bg-white border rounded shadow-sm p-3 h-100 d-flex flex-column align-items-center justify-content-center category-tile">
-            <?php if (!empty($cat['icon'])): ?>
-              <img src="uploads/icons/<?= htmlspecialchars($cat['icon']) ?>" class="mb-2" style="height: 60px;">
-            <?php else: ?>
-              <div class="mb-2" style="height: 60px;"></div>
-            <?php endif; ?>
-            <div class="fw-semibold"><?= htmlspecialchars($cat['name']) ?></div>
+        <a href="category.php?cat=<?= urlencode($cat['slug']) ?>" class="text-decoration-none d-block">
+          <div class="position-relative overflow-hidden rounded shadow-sm category-tile" style="height: 150px;">
+            <img src="uploads/icons/<?= htmlspecialchars($cat['icon']) ?>" 
+                 class="w-100 h-100 object-fit-cover" 
+                 style="filter: brightness(70%);">
+            <div class="position-absolute top-50 start-50 translate-middle text-white fw-semibold text-center px-2">
+              <?= htmlspecialchars($cat['name']) ?>
+            </div>
           </div>
         </a>
       </div>
     <?php endforeach; ?>
   </div>
 </div>
+
 
   <!-- LATEST STORIES -->
   <div class="container my-5 py-4">
@@ -319,7 +319,10 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
     background-color: #f8f9fa;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
-  
+  .object-fit-cover {
+  object-fit: cover;
+}
+
   .navbar {
     transition: all 0.3s ease;
   }
