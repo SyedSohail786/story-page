@@ -100,6 +100,27 @@ $popular = $pdo->query("SELECT * FROM stories WHERE is_popular=1 ORDER BY create
 
 <!-- Main Content Area -->
 <div class="container-fluid bg-light">
+
+<!-- SEARCH BAR -->
+<div class="container my-4">
+  <form action="search.php" method="get" class="d-flex justify-content-center">
+    <div class="input-group" style="max-width: 800px; height: 50px;">
+      <input 
+        type="text" 
+        class="form-control shadow-sm rounded-start border-orange" 
+        name="q" 
+        placeholder="Search stories..." 
+        required>
+      <button class="btn btn-orange rounded-end px-4" type="submit">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search me-1" viewBox="0 0 16 16">
+          <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.415l-3.85-3.85zm-5.242.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/>
+        </svg>
+        Search
+      </button>
+    </div>
+  </form>
+</div>
+
   <!-- Hero Slider -->
   <div class="container my-4">
     <div id="mainSlider" class="carousel slide carousel-fade shadow-lg rounded-4 overflow-hidden" data-bs-ride="carousel">
@@ -429,6 +450,15 @@ $popular = $pdo->query("SELECT * FROM stories WHERE is_popular=1 ORDER BY create
       font-size: 1.5rem !important;
     }
   }
+
+  .border-orange {
+  border-color: #fd7e14;
+}
+.input-group input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(253, 126, 20, 0.25);
+  border-color: #fd7e14;
+}
+
 </style>
 
 <script>
