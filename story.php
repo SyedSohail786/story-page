@@ -121,8 +121,16 @@ if (!$story) {
   <?php endif; ?>
   
   <div class="story-content">
-    <?= nl2br(htmlspecialchars($story['content'])) ?>
-  </div>
+  <?php
+  $paragraphs = preg_split('/\r\n|\r|\n/', trim($story['content']));
+  foreach ($paragraphs as $para) {
+    if (trim($para) !== '') {
+      echo '<p>' . htmlspecialchars($para) . '</p>';
+    }
+  }
+  ?>
+</div>
+
   
   <?php if (!empty($story['gallery'])): $gallery = json_decode($story['gallery']); ?>
     <div class="row mt-5">
