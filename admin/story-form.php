@@ -79,85 +79,177 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<h2 class="mb-4"><?= $editing ? 'Edit' : 'Add New' ?> Story</h2>
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-0"><i class="bi bi-book me-2"></i><?= $editing ? 'Edit' : 'Add New' ?> Story</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="stories.php">Stories</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><?= $editing ? 'Edit' : 'Add' ?></li>
+                </ol>
+            </nav>
+        </div>
+    </div>
 
-<form method="POST" enctype="multipart/form-data" class="col-lg-8">
+    <form method="POST" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary mb-4"><i class="bi bi-info-circle me-2"></i>Story Content</h5>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
+                            <input name="title" class="form-control form-control-lg" required value="<?= htmlspecialchars($story['title'] ?? '') ?>">
+                        </div>
 
-  <div class="mb-3">
-    <label class="form-label">Title</label>
-    <input name="title" class="form-control" required value="<?= htmlspecialchars($story['title'] ?? '') ?>">
-  </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Category <span class="text-danger">*</span></label>
+                            <select name="category_id" class="form-select" required>
+                                <option value="">Select Category</option>
+                                <?php foreach ($categories as $cat): ?>
+                                    <option value="<?= $cat['id'] ?>" <?= ($story['category_id'] ?? '') == $cat['id'] ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($cat['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
 
-  <div class="mb-3">
-    <label class="form-label">Category</label>
-    <select name="category_id" class="form-select" required>
-      <?php foreach ($categories as $cat): ?>
-        <option value="<?= $cat['id'] ?>" <?= ($story['category_id'] ?? '') == $cat['id'] ? 'selected' : '' ?>>
-          <?= htmlspecialchars($cat['name']) ?>
-        </option>
-      <?php endforeach; ?>
-    </select>
-  </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Content <span class="text-danger">*</span></label>
+                            <textarea name="content" class="form-control" rows="8" id="editor"><?= htmlspecialchars($story['content'] ?? '') ?></textarea>
+                        </div>
+                    </div>
+                </div>
 
-  <div class="mb-3">
-    <label class="form-label">Thumbnail</label>
-    <input type="file" name="thumbnail" class="form-control">
-    <?php if (!empty($story['thumbnail'])): ?>
-      <img src="../<?= $story['thumbnail'] ?>" class="mt-2" style="max-height:100px;">
-    <?php endif; ?>
-  </div>
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary mb-4"><i class="bi bi-image me-2"></i>Media</h5>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Thumbnail Image</label>
+                            <input type="file" name="thumbnail" class="form-control">
+                            <?php if (!empty($story['thumbnail'])): ?>
+                                <div class="mt-3">
+                                    <img src="../<?= $story['thumbnail'] ?>" class="img-thumbnail" style="max-height:150px;">
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" name="remove_thumbnail" id="remove_thumbnail">
+                                        <label class="form-check-label text-danger" for="remove_thumbnail">Remove current thumbnail</label>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                        </div>
 
-  <div class="mb-3">
-    <label class="form-label">Gallery (Multiple Images)</label>
-    <input type="file" name="gallery[]" class="form-control" multiple>
-  </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Gallery Images</label>
+                            <input type="file" name="gallery[]" class="form-control" multiple>
+                            <?php if (!empty($story['gallery'])): ?>
+                                <div class="row mt-3">
+                                    <?php foreach (json_decode($story['gallery']) as $image): ?>
+                                        <div class="col-md-3 mb-3">
+                                            <img src="../<?= $image ?>" class="img-thumbnail w-100">
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-  <div class="mb-3">
-    <label class="form-label">Content</label>
-    <textarea name="content" class="form-control" rows="6"><?= htmlspecialchars($story['content'] ?? '') ?></textarea>
-  </div>
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary mb-4"><i class="bi bi-tags me-2"></i>Story Settings</h5>
+                        
+                        <div class="mb-4">
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" name="is_latest" id="is_latest" <?= ($story['is_latest'] ?? false) ? 'checked' : '' ?>>
+                                <label class="form-check-label fw-semibold" for="is_latest">Featured as Latest Story</label>
+                            </div>
 
-  <div class="form-check mb-2">
-    <input class="form-check-input" type="checkbox" name="is_latest" <?= ($story['is_latest'] ?? false) ? 'checked' : '' ?>>
-    <label class="form-check-label">Mark as Latest</label>
-  </div>
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" name="is_popular" id="is_popular" <?= ($story['is_popular'] ?? false) ? 'checked' : '' ?>>
+                                <label class="form-check-label fw-semibold" for="is_popular">Mark as Popular Story</label>
+                            </div>
 
-  <div class="form-check mb-2">
-    <input class="form-check-input" type="checkbox" name="is_popular" <?= ($story['is_popular'] ?? false) ? 'checked' : '' ?>>
-    <label class="form-check-label">Mark as Popular</label>
-  </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="is_banner" id="is_banner" <?= ($story['is_banner'] ?? false) ? 'checked' : '' ?>>
+                                <label class="form-check-label fw-semibold" for="is_banner">Show in Banner Slider</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-  <div class="form-check mb-4">
-    <input class="form-check-input" type="checkbox" name="is_banner" <?= ($story['is_banner'] ?? false) ? 'checked' : '' ?>>
-    <label class="form-check-label">Show in Banner Slider</label>
-  </div>
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary mb-4"><i class="bi bi-person me-2"></i>Author Information</h5>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Author Name <span class="text-danger">*</span></label>
+                            <input name="user_name" class="form-control" required value="<?= htmlspecialchars($story['user_name'] ?? '') ?>">
+                        </div>
 
-  <div class="mb-3">
-    <label class="form-label">User Name</label>
-    <input name="user_name" class="form-control" required value="<?= htmlspecialchars($story['user_name'] ?? '') ?>">
-  </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Contact Info <span class="text-danger">*</span></label>
+                            <input name="user_contact" class="form-control" required value="<?= htmlspecialchars($story['user_contact'] ?? '') ?>">
+                        </div>
 
-  <div class="mb-3">
-    <label class="form-label">User Contact</label>
-    <input name="user_contact" class="form-control" required value="<?= htmlspecialchars($story['user_contact'] ?? '') ?>">
-  </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Address</label>
+                            <textarea name="user_address" class="form-control" rows="2"><?= htmlspecialchars($story['user_address'] ?? '') ?></textarea>
+                        </div>
+                    </div>
+                </div>
 
-  <div class="mb-3">
-    <label class="form-label">User Address</label>
-    <textarea name="user_address" class="form-control" rows="2"><?= htmlspecialchars($story['user_address'] ?? '') ?></textarea>
-  </div>
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary mb-4"><i class="bi bi-search me-2"></i>SEO Settings</h5>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">SEO Title</label>
+                            <input name="seo_title" class="form-control" maxlength="255" value="<?= htmlspecialchars($story['seo_title'] ?? '') ?>">
+                            <small class="text-muted">Recommended: 50-60 characters</small>
+                        </div>
 
-  <div class="mb-3">
-    <label class="form-label">SEO Title</label>
-    <input name="seo_title" class="form-control" maxlength="255" value="<?= htmlspecialchars($story['seo_title'] ?? '') ?>">
-  </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Meta Description</label>
+                            <textarea name="meta_description" class="form-control" maxlength="255" rows="3"><?= htmlspecialchars($story['meta_description'] ?? '') ?></textarea>
+                            <small class="text-muted">Recommended: 150-160 characters</small>
+                        </div>
+                    </div>
+                </div>
 
-  <div class="mb-3">
-    <label class="form-label">Meta Description</label>
-    <textarea name="meta_description" class="form-control" maxlength="255" rows="3"><?= htmlspecialchars($story['meta_description'] ?? '') ?></textarea>
-  </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-save me-2"></i>Save Story
+                    </button>
+                    <a href="stories.php" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle me-2"></i>Cancel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 
-  <button class="btn btn-primary">Save Story</button>
-</form>
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#editor').summernote({
+            height: 300,
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+    });
+</script>
 
 <?php include 'includes/footer.php'; ?>
