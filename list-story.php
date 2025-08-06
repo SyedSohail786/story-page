@@ -1,7 +1,7 @@
 <?php
 require_once 'includes/db.php';
 
-$recaptchaSecret = "";
+$recaptchaSecret = "6LcPpZwrAAAAAIO-SvWIREIwlyebSKJQcyqB8SBY";
 $msg = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
