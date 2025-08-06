@@ -25,7 +25,7 @@ if (!isset($_SESSION['admin_id'])) {
         </div>
         <div>
             <div class="fw-bold"><?= htmlspecialchars($_SESSION['admin_username'] ?? 'Admin') ?></div>
-            <small class="text-white">Last login: <?= date('M j, g:i a', $_SESSION['last_activity'] ?? time()) ?></small>
+            <!-- <small class="text-white">Last login: <?= date('M j, g:i a', $_SESSION['last_activity'] ?? time()) ?></small> -->
         </div>
     </div>
     

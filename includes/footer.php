@@ -24,7 +24,7 @@ $categories_result = $pdo->query("SELECT * FROM categories ORDER BY name");
         <ul class="list-unstyled">
           <?php if ($categories_result): ?>
             <?php foreach ($categories_result as $category): ?>
-              <li class="mb-2"><a href="category.php?id=<?= $category['id'] ?>" class="text-white-50 hover-orange d-inline-block transition"><?= htmlspecialchars($category['name']) ?></a></li>
+              <li class="mb-2"><a href="<?= $category['slug'] ?>" class="text-white-50 hover-orange d-inline-block transition"><?= htmlspecialchars($category['name']) ?></a></li>
             <?php endforeach; ?>
           <?php else: ?>
             <li class="text-white-50">No categories available</li>

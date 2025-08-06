@@ -96,8 +96,8 @@ $metaDesc = $story['meta_description'] ?: substr(strip_tags($story['content']), 
 <main class="container my-4">
   <!-- Back Button -->
   <div class="mb-4">
-    <a href="index.php" class="btn btn-outline-primary rounded-pill px-4 py-2">
-      <i class="bi bi-arrow-left me-2"></i> Back to Home
+    <a href="index.php" class="btn btn-outline-secondary rounded-pill px-4 py-2">
+      <i class="bi bi-arrow-left me-2"></i> Back
     </a>
   </div>
 
@@ -185,7 +185,7 @@ $metaDesc = $story['meta_description'] ?: substr(strip_tags($story['content']), 
               <div class="card-body d-flex flex-column">
                 <h5 class="card-title"><?= htmlspecialchars($service['name']) ?></h5>
                 <p class="card-text small text-muted"><?= htmlspecialchars($service['short_description']) ?></p>
-                <a href="contact.php" class="btn btn-sm btn-primary mt-auto">Learn More</a>
+                <a href="contact.php" class="btn btn-sm btn-primary mt-auto">Get Service</a>
               </div>
             </div>
           </div>

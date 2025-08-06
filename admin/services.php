@@ -197,9 +197,9 @@ try {
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="mb-0"><i class="bi bi-gear-wide-connected me-2"></i>Manage Services</h2>
-                <a href="services.php" class="btn btn-outline-primary">
+                <!-- <a href="services.php" class="btn btn-outline-primary">
                     <i class="bi bi-plus-lg me-1"></i> Add New Service
-                </a>
+                </a> -->
             </div>
         </div>
     </div>
