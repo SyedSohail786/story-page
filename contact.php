@@ -1,14 +1,27 @@
 <?php
 require_once 'includes/db.php';
+
+$recaptchaSecret = "6LcPpZwrAAAAAIO-SvWIREIwlyebSKJQcyqB8SBY";
+$msg = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $stmt = $pdo->prepare("INSERT INTO messages (name, email, subject, message) VALUES (?, ?, ?, ?)");
-  $stmt->execute([
-    $_POST['name'],
-    $_POST['email'],
-    $_POST['subject'],
-    $_POST['message']
-  ]);
-  $msg = "Thank you for contacting us! We'll get back to you soon.";
+  $name = $_POST['name'];
+  $email = $_POST['email'];
+  $message = $_POST['message'];
+  $subject = $_POST['subject'];
+  $recaptchaResponse = $_POST['g-recaptcha-response'];
+
+  // Verify reCAPTCHA
+  $verify = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$recaptchaSecret}&response={$recaptchaResponse}");
+  $captchaSuccess = json_decode($verify)->success;
+
+  if ($captchaSuccess) {
+    $stmt = $pdo->prepare("INSERT INTO messages (name, email, subject, message) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$name, $email, $subject, $message]);
+    $msg = "Thank you for contacting us!";
+  } else {
+    $msg = "reCAPTCHA verification failed. Please try again.";
+  }
 }
 ?>
 <?php include 'includes/header.php'; ?>
@@ -166,7 +179,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <textarea name="message" class="form-control" id="message" rows="5" placeholder="How can we help you?" required></textarea>
                     <div class="invalid-feedback">Please write your message.</div>
                   </div>
-                  
+                  <div class="mb-3">
+                    <div class="g-recaptcha" data-sitekey="6LcPpZwrAAAAAH0sFt-eMbBMuE1uwMtxaM2P-a_e"></div>
+                  </div>
+
                   <div class="text-center">
                     <button class="btn btn-lg px-5 text-white fw-bold" style="background-color: #fd7e14;" type="submit">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send me-2" viewBox="0 0 16 16">
@@ -348,7 +364,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   }
 </style>
-
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
 // Navbar scroll effect
 window.addEventListener('scroll', function() {
