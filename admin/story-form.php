@@ -6,6 +6,9 @@ require_once '../includes/db.php';
 $id = $_GET['id'] ?? null;
 $editing = false;
 
+$error = '';
+$success = '';
+
 if ($id) {
     $stmt = $pdo->prepare("SELECT * FROM stories WHERE id = ?");
     $stmt->execute([$id]);
@@ -39,44 +42,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $slug = !empty($_POST['slug']) ? generateSlug($_POST['slug']) : generateSlug($title);
 
-
     $thumbnail = $story['thumbnail'] ?? '';
     if (!empty($_FILES['thumbnail']['name'])) {
-        $thumbnail = 'uploads/' . uniqid() . '_' . $_FILES['thumbnail']['name'];
-        move_uploaded_file($_FILES['thumbnail']['tmp_name'], "../$thumbnail");
+        if ($_FILES['thumbnail']['size'] > 512000) {
+            $error = 'Thumbnail image must be less than 500KB.';
+        } else {
+            $thumbnail = 'uploads/' . uniqid() . '_' . $_FILES['thumbnail']['name'];
+            move_uploaded_file($_FILES['thumbnail']['tmp_name'], "../$thumbnail");
+        }
     }
 
     $gallery = [];
     if (!empty($_FILES['gallery']['name'][0])) {
         foreach ($_FILES['gallery']['tmp_name'] as $i => $tmp_name) {
-            $filename = 'uploads/' . uniqid() . '_' . $_FILES['gallery']['name'][$i];
-            move_uploaded_file($tmp_name, "../$filename");
-            $gallery[] = $filename;
+            if ($_FILES['gallery']['size'][$i] > 512000) {
+                $error = 'Each gallery image must be less than 500KB.';
+                break;
+            } else {
+                $filename = 'uploads/' . uniqid() . '_' . $_FILES['gallery']['name'][$i];
+                move_uploaded_file($tmp_name, "../$filename");
+                $gallery[] = $filename;
+            }
         }
     }
 
-    if ($editing) {
-        $stmt = $pdo->prepare("UPDATE stories SET title=?, slug=?, category_id=?, thumbnail=?, gallery=?, content=?, is_latest=?, is_popular=?, is_banner=?, user_name=?, user_contact=?, user_address=?, seo_title=?, meta_description=? WHERE id=?");
-        $stmt->execute([
-            $title, $slug, $category_id, $thumbnail, json_encode($gallery), $content,
-            $is_latest, $is_popular, $is_banner,
-            $user_name, $user_contact, $user_address,
-            $seo_title, $meta_description,
-            $id
-        ]);
-    } else {
-        $stmt = $pdo->prepare("INSERT INTO stories (title, slug, category_id, thumbnail, gallery, content, is_latest, is_popular, is_banner, user_name, user_contact, user_address, seo_title, meta_description)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([
-            $title, $slug, $category_id, $thumbnail, json_encode($gallery), $content,
-            $is_latest, $is_popular, $is_banner,
-            $user_name, $user_contact, $user_address,
-            $seo_title, $meta_description
-        ]);
-    }
+    if (!$error) {
+        if ($editing) {
+            $stmt = $pdo->prepare("UPDATE stories SET title=?, slug=?, category_id=?, thumbnail=?, gallery=?, content=?, is_latest=?, is_popular=?, is_banner=?, user_name=?, user_contact=?, user_address=?, seo_title=?, meta_description=? WHERE id=?");
+            $stmt->execute([
+                $title, $slug, $category_id, $thumbnail, json_encode($gallery), $content,
+                $is_latest, $is_popular, $is_banner,
+                $user_name, $user_contact, $user_address,
+                $seo_title, $meta_description,
+                $id
+            ]);
+        } else {
+            $stmt = $pdo->prepare("INSERT INTO stories (title, slug, category_id, thumbnail, gallery, content, is_latest, is_popular, is_banner, user_name, user_contact, user_address, seo_title, meta_description)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([
+                $title, $slug, $category_id, $thumbnail, json_encode($gallery), $content,
+                $is_latest, $is_popular, $is_banner,
+                $user_name, $user_contact, $user_address,
+                $seo_title, $meta_description
+            ]);
+        }
 
-    header("Location: stories.php");
-    exit;
+        header("Location: stories.php");
+        exit;
+    }
 }
 ?>
 
@@ -94,24 +107,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
+    <?php if (!empty($error)): ?>
+        <div class="alert alert-danger"><?= $error ?></div>
+    <?php endif; ?>
+
     <form method="POST" enctype="multipart/form-data">
         <div class="row">
             <div class="col-lg-8">
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-body">
                         <h5 class="card-title text-primary mb-4"><i class="bi bi-info-circle me-2"></i>Story Content</h5>
-                        
+
                         <div class="mb-4">
                             <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
-                            
                             <input name="title" class="form-control form-control-lg" required value="<?= htmlspecialchars($story['title'] ?? '') ?>">
                         </div>
-                        <div class="mb-4">
-    <label class="form-label fw-semibold">Slug <small class="text-muted">(Optional)</small></label>
-    <input name="slug" class="form-control" value="<?= htmlspecialchars($story['slug'] ?? '') ?>">
-    <small class="text-muted">URL-friendly version (e.g., story-title-here). Leave blank to auto-generate.</small>
-</div>
 
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Slug <small class="text-muted">(Optional)</small></label>
+                            <input name="slug" class="form-control" value="<?= htmlspecialchars($story['slug'] ?? '') ?>">
+                            <small class="text-muted">URL-friendly version (e.g., story-title-here). Leave blank to auto-generate.</small>
+                        </div>
 
                         <div class="mb-4">
                             <label class="form-label fw-semibold">Category <span class="text-danger">*</span></label>
@@ -135,9 +151,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-body">
                         <h5 class="card-title text-primary mb-4"><i class="bi bi-image me-2"></i>Media</h5>
-                        
+
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">Thumbnail Image</label>
+                            <label class="form-label fw-semibold">Thumbnail Image <small class="text-muted">(Max 500KB)</small></label>
                             <input type="file" name="thumbnail" class="form-control">
                             <?php if (!empty($story['thumbnail'])): ?>
                                 <div class="mt-3">
@@ -151,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
 
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">Gallery Images</label>
+                            <label class="form-label fw-semibold">Gallery Images <small class="text-muted">(Each max 500KB)</small></label>
                             <input type="file" name="gallery[]" class="form-control" multiple>
                             <?php if (!empty($story['gallery'])): ?>
                                 <div class="row mt-3">
@@ -171,22 +187,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-body">
                         <h5 class="card-title text-primary mb-4"><i class="bi bi-tags me-2"></i>Story Settings</h5>
-                        
-                        <div class="mb-4">
-                            <div class="form-check form-switch mb-3">
-                                <input class="form-check-input" type="checkbox" name="is_latest" id="is_latest" <?= ($story['is_latest'] ?? false) ? 'checked' : '' ?>>
-                                <label class="form-check-label fw-semibold" for="is_latest">Featured as Latest Story</label>
-                            </div>
 
-                            <div class="form-check form-switch mb-3">
-                                <input class="form-check-input" type="checkbox" name="is_popular" id="is_popular" <?= ($story['is_popular'] ?? false) ? 'checked' : '' ?>>
-                                <label class="form-check-label fw-semibold" for="is_popular">Mark as Popular Story</label>
-                            </div>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" name="is_latest" id="is_latest" <?= ($story['is_latest'] ?? false) ? 'checked' : '' ?>>
+                            <label class="form-check-label fw-semibold" for="is_latest">Featured as Latest Story</label>
+                        </div>
 
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" name="is_banner" id="is_banner" <?= ($story['is_banner'] ?? false) ? 'checked' : '' ?>>
-                                <label class="form-check-label fw-semibold" for="is_banner">Show in Banner Slider</label>
-                            </div>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" name="is_popular" id="is_popular" <?= ($story['is_popular'] ?? false) ? 'checked' : '' ?>>
+                            <label class="form-check-label fw-semibold" for="is_popular">Mark as Popular Story</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="is_banner" id="is_banner" <?= ($story['is_banner'] ?? false) ? 'checked' : '' ?>>
+                            <label class="form-check-label fw-semibold" for="is_banner">Show in Banner Slider</label>
                         </div>
                     </div>
                 </div>
@@ -194,7 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-body">
                         <h5 class="card-title text-primary mb-4"><i class="bi bi-person me-2"></i>Author Information</h5>
-                        
+
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Author Name <span class="text-danger">*</span></label>
                             <input name="user_name" class="form-control" required value="<?= htmlspecialchars($story['user_name'] ?? '') ?>">
@@ -215,7 +229,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-body">
                         <h5 class="card-title text-primary mb-4"><i class="bi bi-search me-2"></i>SEO Settings</h5>
-                        
+
                         <div class="mb-3">
                             <label class="form-label fw-semibold">SEO Title</label>
                             <input name="seo_title" class="form-control" maxlength="255" value="<?= htmlspecialchars($story['seo_title'] ?? '') ?>">
