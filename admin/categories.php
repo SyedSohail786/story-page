@@ -156,12 +156,12 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
                                             <td class="text-end">
                                                 <div class="d-flex gap-2 justify-content-end">
                                                     <a href="?edit=<?= $c['id'] ?>" class="btn btn-sm btn-outline-primary rounded-pill px-3">
-                                                        <i class="bi bi-pencil me-1"></i> Edit
+                                                        <i class="bi bi-pencil me-1"></i>
                                                     </a>
                                                     <a href="?delete=<?= $c['id'] ?>" 
                                                        onclick="return confirm('Are you sure you want to delete this category?')" 
                                                        class="btn btn-sm btn-outline-danger rounded-pill px-3">
-                                                        <i class="bi bi-trash me-1"></i> Delete
+                                                        <i class="bi bi-trash me-1"></i>
                                                     </a>
                                                 </div>
                                             </td>

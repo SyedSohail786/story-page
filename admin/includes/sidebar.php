@@ -56,10 +56,15 @@ if (!isset($_SESSION['admin_id'])) {
             </a>
         </li>
         <li class="nav-item">
-    <a href="services.php" class="nav-link text-white <?= basename($_SERVER['PHP_SELF']) === 'services.php' ? 'active' : '' ?>">
-        <i class="bi bi-gear-wide-connected me-2"></i>Services
-    </a>
-</li>
+            <a href="services.php" class="nav-link text-white <?= basename($_SERVER['PHP_SELF']) === 'services.php' ? 'active' : '' ?>">
+                <i class="bi bi-gear-wide-connected me-2"></i>Services
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="business.php" class="nav-link text-white <?= basename($_SERVER['PHP_SELF']) === 'business.php' ? 'active' : '' ?>">
+                <i class="bi bi-gear-wide-connected me-2"></i>Business
+            </a>
+        </li>
     </ul>
     
     <hr class="my-2 bg-secondary">
