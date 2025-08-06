@@ -104,13 +104,15 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
 <div class="container-fluid bg-light">
 
 <!-- SEARCH BAR -->
-<div class="container my-4">
-  <form action="search.php" method="get" class="d-flex justify-content-center">
-    <div class="input-group" style="max-width: 800px; height: 50px;">
+<div class="container my-4 position-relative">
+  <form action="search.php" method="get" class="d-flex justify-content-center position-relative">
+    <div class="input-group position-relative w-100" style="max-width: 800px; height: 50px;">
       <input 
         type="text" 
         class="form-control shadow-sm rounded-start border-orange" 
         name="q" 
+        id="searchInput"
+        autocomplete="off"
         placeholder="Search stories..." 
         required>
       <button class="btn btn-orange rounded-end px-4" type="submit">
@@ -119,6 +121,9 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
         </svg>
         Search
       </button>
+
+      <!-- Suggestions List -->
+      <ul id="suggestions" class="list-group position-absolute w-100 start-0 top-100 mt-1 shadow-sm" style="z-index: 1050;"></ul>
     </div>
   </form>
 </div>
@@ -490,6 +495,15 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
   border-color: #fd7e14;
 }
 
+#suggestions {
+  max-height: 250px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+}
+
 </style>
 
 <script>
@@ -539,5 +553,50 @@ document.addEventListener('DOMContentLoaded', function() {
       ride: 'carousel'
     });
   }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  const input = document.getElementById('searchInput');
+  const suggestions = document.getElementById('suggestions');
+
+  input.addEventListener('input', function () {
+    const query = this.value;
+
+    if (query.length < 2) {
+      suggestions.innerHTML = '';
+      return;
+    }
+
+    fetch(`includes/search-suggest.php?term=${encodeURIComponent(query)}`)
+      .then(res => res.json())
+      .then(data => {
+        suggestions.innerHTML = '';
+
+        if (data.length === 0) {
+          const li = document.createElement('li');
+          li.classList.add('list-group-item', 'text-muted');
+          li.textContent = 'No suggestions found';
+          suggestions.appendChild(li);
+        } else {
+          data.forEach(item => {
+            const li = document.createElement('li');
+            li.classList.add('list-group-item', 'list-group-item-action');
+            li.textContent = item;
+            li.addEventListener('click', () => {
+              input.value = item;
+              suggestions.innerHTML = '';
+            });
+            suggestions.appendChild(li);
+          });
+        }
+      });
+  });
+
+  // Hide suggestions when clicking outside
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('#searchInput')) {
+      suggestions.innerHTML = '';
+    }
+  });
 });
 </script>
