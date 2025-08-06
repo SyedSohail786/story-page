@@ -13,10 +13,15 @@
       background-color: #f8f9fa;
     }
     .main-content {
-      margin-left: 250px;
-      padding: 30px;
-      transition: all 0.3s;
-    }
+  padding: 30px;
+  transition: all 0.3s;
+}
+@media (min-width: 768px) {
+  .main-content {
+    margin-left: 250px;
+  }
+}
+
     .card {
       border: none;
       border-radius: 10px;
@@ -66,9 +71,16 @@
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
 <body>
   <?php include 'includes/sidebar.php'; ?>
+  <!-- Sidebar Toggle Button (Mobile Only) -->
+<button class="btn btn-dark d-md-none m-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminSidebar" aria-controls="adminSidebar">
+  <i class="bi bi-list"></i>
+</button>
+
 
   <div class="main-content">
     <?php

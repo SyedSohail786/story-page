@@ -37,7 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         return trim($slug, '-');
     }
 
-    $slug = generateSlug($title);
+    $slug = !empty($_POST['slug']) ? generateSlug($_POST['slug']) : generateSlug($title);
+
 
     $thumbnail = $story['thumbnail'] ?? '';
     if (!empty($_FILES['thumbnail']['name'])) {
@@ -102,8 +103,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                         <div class="mb-4">
                             <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
+                            
                             <input name="title" class="form-control form-control-lg" required value="<?= htmlspecialchars($story['title'] ?? '') ?>">
                         </div>
+                        <div class="mb-4">
+    <label class="form-label fw-semibold">Slug <small class="text-muted">(Optional)</small></label>
+    <input name="slug" class="form-control" value="<?= htmlspecialchars($story['slug'] ?? '') ?>">
+    <small class="text-muted">URL-friendly version (e.g., story-title-here). Leave blank to auto-generate.</small>
+</div>
+
 
                         <div class="mb-4">
                             <label class="form-label fw-semibold">Category <span class="text-danger">*</span></label>
