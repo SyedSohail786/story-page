@@ -61,10 +61,15 @@ if (!isset($_SESSION['admin_id'])) {
             </a>
         </li>
         <li class="nav-item">
-            <a href="business.php" class="nav-link text-white <?= basename($_SERVER['PHP_SELF']) === 'business.php' ? 'active' : '' ?>">
-                <i class="bi bi-gear-wide-connected me-2"></i>Business
-            </a>
-        </li>
+    <a href="business.php" class="nav-link text-white <?= basename($_SERVER['PHP_SELF']) === 'business.php' ? 'active' : '' ?>">
+        <i class="bi bi-building me-2"></i>Business
+    </a>
+</li>
+<li class="nav-item">
+    <a href="event.php" class="nav-link text-white <?= basename($_SERVER['PHP_SELF']) === 'event.php' ? 'active' : '' ?>">
+        <i class="bi bi-calendar-event me-2"></i>Events
+    </a>
+</li>
     </ul>
     
     <hr class="my-2 bg-secondary">
