@@ -14,11 +14,7 @@ if (!isset($_SESSION['admin_id'])) {
 <div class="d-flex flex-column p-3 bg-dark text-white vh-100" style="width: 250px; position: fixed;">
     <div class="sidebar-header mb-4 d-flex align-items-center">
         <h4 class="mb-0 text-white">Admin Panel</h4>
-        <small class="ms-2 text-muted">v1.0</small>
     </div>
-    
-    <hr class="my-2 bg-secondary">
-    
     <div class="d-flex align-items-center mb-4">
         <div class="me-2">
             <i class="bi bi-person-circle fs-4"></i>

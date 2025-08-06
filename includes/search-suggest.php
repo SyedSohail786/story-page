@@ -4,8 +4,8 @@ require_once 'db.php';
 $term = $_GET['term'] ?? '';
 
 if (strlen($term) < 2) {
-    echo json_encode([]);
-    exit;
+     echo json_encode([]);
+     exit;
 }
 
 $stmt = $pdo->prepare("SELECT title FROM stories WHERE title LIKE ? LIMIT 10");
