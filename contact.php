@@ -1,7 +1,7 @@
 <?php
 require_once 'includes/db.php';
 
-$recaptchaSecret = "6LcPpZwrAAAAAIO-SvWIREIwlyebSKJQcyqB8SBY";
+$recaptchaSecret = "";
 $msg = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -179,9 +179,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <textarea name="message" class="form-control" id="message" rows="5" placeholder="How can we help you?" required></textarea>
                     <div class="invalid-feedback">Please write your message.</div>
                   </div>
-                  <div class="mb-3">
+                  <div class="mb-3 col-12 d-flex justify-content-center align-items-center">
                     <div class="g-recaptcha" data-sitekey="6LcPpZwrAAAAAH0sFt-eMbBMuE1uwMtxaM2P-a_e"></div>
                   </div>
+
 
                   <div class="text-center">
                     <button class="btn btn-lg px-5 text-white fw-bold" style="background-color: #fd7e14;" type="submit">
