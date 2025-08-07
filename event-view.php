@@ -144,6 +144,33 @@ $metaDesc  = htmlspecialchars($event['meta_description'] ?: substr(strip_tags($e
       <img src="<?= $event['image'] ?>" alt="<?= htmlspecialchars($event['name']) ?>" class="img-fluid mb-4 rounded">
     <?php endif; ?>
     <div class="bg-white p-4 rounded shadow-sm"><?= nl2br(htmlspecialchars($event['description'])) ?></div>
+
+     <?php
+  $services = $pdo->query("SELECT * FROM services ORDER BY id DESC")->fetchAll();
+  if (!empty($services)): ?>
+    <section class="my-4">
+      <h2 class="h4 mb-4 pb-2 border-bottom">Related Services</h2>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+        <?php foreach ($services as $service): ?>
+          <div class="col">
+            <div class="card h-100 shadow-sm border-0">
+              <?php if (!empty($service['image'])): ?>
+                <img src="<?= htmlspecialchars($service['image']) ?>" 
+                     class="card-img-top" 
+                     style="height: 180px; object-fit: cover;"
+                     loading="lazy">
+              <?php endif; ?>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title"><?= htmlspecialchars($service['name']) ?></h5>
+                <p class="card-text small text-muted"><?= htmlspecialchars($service['short_description']) ?></p>
+                <a href="contact.php" class="btn btn-sm btn-primary mt-auto">Get Service</a>
+              </div>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      </div>
+    </section>
+  <?php endif; ?>
   </main>
 
   <?php include 'includes/footer.php'; ?>

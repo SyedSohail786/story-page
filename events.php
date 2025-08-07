@@ -177,8 +177,8 @@ $metaDesc = "Browse all upcoming events in your area. Find events happening toda
               </p>
               <p class="card-text text-truncate-3"><?= htmlspecialchars(substr(strip_tags($event['description']), 0, 100)) ?> ...</p> 
             </div> 
-            <div class="card-footer bg-transparent border-0">
-              <a href="event.php?id=<?= $event['id'] ?>" class="btn btn-sm btn-orange w-100">View Details</a>
+            <div class="card-footer bg-transparent border-0 pt-0">
+              <a href="event/<?= urlencode($event['slug']) ?>" class="btn btn-sm btn-orange w-100">View Details</a>
             </div>
           </div>
         </div>

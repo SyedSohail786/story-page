@@ -179,8 +179,8 @@ include 'includes/header.php';
               <p class="card-text text-muted small"><?= htmlspecialchars($biz['type']) ?></p>
               <p class="card-text text-truncate"><?= htmlspecialchars(substr(strip_tags($biz['description']), 0, 100)) ?>...</p>
             </div>
-            <div class="card-footer bg-transparent border-0">
-              <a href="business-view.php?id=<?= $biz['id'] ?>" class="btn btn-sm btn-orange w-100">View Details</a>
+             <div class="card-footer bg-transparent border-0 pt-0">
+              <a href="business/<?= urlencode($biz['slug']) ?>" class="btn btn-sm btn-orange w-100">View Details</a>
             </div>
           </div>
         </div>
