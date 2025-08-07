@@ -3,259 +3,168 @@ $pageTitle = "Manage Businesses";
 require_once 'includes/layout.php';
 require_once '../includes/db.php';
 
-// Handle business type operations
-if (isset($_POST['create_type'])) {
-  $newType = trim($_POST['new_type']);
-  if (!empty($newType)) {
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM business_types WHERE type_name = ?");
-    $stmt->execute([$newType]);
-    if ($stmt->fetchColumn() == 0) {
-      $pdo->prepare("INSERT INTO business_types (type_name) VALUES (?)")->execute([$newType]);
-    }
-  }
-  header("Location: business.php");
-  exit;
+function generateSlug($text) {
+    $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $text);
+    $slug = strtolower($slug);
+    $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+    return trim($slug, '-');
 }
 
-if (isset($_POST['update_type'])) {
-  $typeId = $_POST['type_id'];
-  $updatedType = trim($_POST['updated_type']);
-  if (!empty($updatedType) && is_numeric($typeId)) {
-    $pdo->prepare("UPDATE business_types SET type_name = ? WHERE id = ?")
-      ->execute([$updatedType, $typeId]);
-  }
-  header("Location: business.php");
-  exit;
+// Handle type management
+if (isset($_POST['create_type'])) {
+    $newType = trim($_POST['new_type']);
+    if (!empty($newType)) {
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM business_types WHERE type_name = ?");
+        $stmt->execute([$newType]);
+        if ($stmt->fetchColumn() == 0) {
+            $pdo->prepare("INSERT INTO business_types (type_name) VALUES (?)")->execute([$newType]);
+        }
+    }
+    header("Location: business.php");
+    exit;
 }
 
 if (isset($_GET['delete_type']) && is_numeric($_GET['delete_type'])) {
-  $pdo->prepare("DELETE FROM business_types WHERE id = ?")->execute([$_GET['delete_type']]);
-  header("Location: business.php");
-  exit;
+    $pdo->prepare("DELETE FROM business_types WHERE id = ?")->execute([$_GET['delete_type']]);
+    header("Location: business.php");
+    exit;
 }
 
-// Handle business operations
+// Handle business delete
 if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-  $pdo->prepare("DELETE FROM businesses WHERE id = ?")->execute([$_GET['delete']]);
-  header("Location: business.php");
-  exit;
+    $pdo->prepare("DELETE FROM businesses WHERE id = ?")->execute([$_GET['delete']]);
+    header("Location: business.php");
+    exit;
 }
 
 $editing = false;
-$editingType = false;
-$currentType = null;
-
 if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
-  $stmt = $pdo->prepare("SELECT * FROM businesses WHERE id = ?");
-  $stmt->execute([$_GET['edit']]);
-  $biz = $stmt->fetch();
-  if ($biz)
-    $editing = true;
-}
-
-if (isset($_GET['edit_type']) && is_numeric($_GET['edit_type'])) {
-  $stmt = $pdo->prepare("SELECT * FROM business_types WHERE id = ?");
-  $stmt->execute([$_GET['edit_type']]);
-  $currentType = $stmt->fetch();
-  if ($currentType)
-    $editingType = true;
+    $stmt = $pdo->prepare("SELECT * FROM businesses WHERE id = ?");
+    $stmt->execute([$_GET['edit']]);
+    $biz = $stmt->fetch();
+    if ($biz) $editing = true;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
-  $name = $_POST['name'];
-  $type = $_POST['type'];
-  $description = $_POST['description'];
+    $name = $_POST['name'];
+    $slug = !empty($_POST['slug']) ? generateSlug($_POST['slug']) : generateSlug($name);
+    $type = $_POST['type'];
+    $description = $_POST['description'];
+    $seo_title = $_POST['seo_title'];
+    $meta_description = $_POST['meta_description'];
 
-  $image = $biz['image'] ?? '';
-  if (!empty($_FILES['image']['name'])) {
-    $image = 'uploads/' . uniqid() . '_' . $_FILES['image']['name'];
-    move_uploaded_file($_FILES['image']['tmp_name'], "../$image");
-  }
+    $image = $biz['image'] ?? '';
+    if (!empty($_FILES['image']['name'])) {
+        if ($_FILES['image']['size'] > 512000) {
+            $error = 'Image must be less than 500KB.';
+        } else {
+            $image = 'uploads/' . uniqid() . '_' . $_FILES['image']['name'];
+            move_uploaded_file($_FILES['image']['tmp_name'], "../$image");
+        }
+    }
 
-  if ($editing) {
-    $pdo->prepare("UPDATE businesses SET name=?, type=?, description=?, image=? WHERE id=?")
-      ->execute([$name, $type, $description, $image, $biz['id']]);
-  } else {
-    $pdo->prepare("INSERT INTO businesses (name, type, description, image) VALUES (?, ?, ?, ?)")
-      ->execute([$name, $type, $description, $image]);
-  }
-
-  header("Location: business.php");
-  exit;
+    if (!isset($error)) {
+        if ($editing) {
+            $pdo->prepare("UPDATE businesses SET name=?, slug=?, type=?, description=?, image=?, seo_title=?, meta_description=? WHERE id=?")
+                ->execute([$name, $slug, $type, $description, $image, $seo_title, $meta_description, $biz['id']]);
+        } else {
+            $pdo->prepare("INSERT INTO businesses (name, slug, type, description, image, seo_title, meta_description)
+                           VALUES (?, ?, ?, ?, ?, ?, ?)")
+                ->execute([$name, $slug, $type, $description, $image, $seo_title, $meta_description]);
+        }
+        header("Location: business.php");
+        exit;
+    }
 }
 
-$businesses = $pdo->query("SELECT * FROM businesses ORDER BY created_at DESC")->fetchAll();
 $businessTypes = $pdo->query("SELECT * FROM business_types ORDER BY type_name")->fetchAll();
+$businesses = $pdo->query("SELECT * FROM businesses ORDER BY created_at DESC")->fetchAll();
 ?>
 
 <div class="container-fluid px-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0">Manage Businesses</h2>
-    <?php if ($editing): ?>
-      <a href="business.php" class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left me-1"></i> Back to list
-      </a>
-    <?php endif; ?>
-  </div>
+  <h2 class="mb-4"><?= $editing ? 'Edit Business' : 'Add New Business' ?></h2>
 
-  <div class="row">
-    <!-- Business Type Management -->
-    <div class="col-lg-4 mb-4">
-      <div class="card shadow">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Business Types</h5>
-          <?php if ($editingType): ?>
-            <a href="business.php" class="btn btn-sm btn-outline-secondary">
-              <i class="fas fa-times"></i> Cancel
-            </a>
-          <?php endif; ?>
-        </div>
-        <div class="card-body">
-          <?php if ($editingType): ?>
-            <form method="POST">
-              <input type="hidden" name="type_id" value="<?= $currentType['id'] ?>">
-              <div class="input-group mb-3">
-                <input type="text" class="form-control" name="updated_type"
-                  value="<?= htmlspecialchars($currentType['type_name']) ?>" required>
-                <button type="submit" name="update_type" class="btn btn-primary">
-                  <i class="fas fa-save me-1"></i> Update
-                </button>
-              </div>
-            </form>
-          <?php else: ?>
-            <form method="POST">
-              <div class="input-group mb-3">
-                <input type="text" class="form-control" name="new_type" placeholder="New business type" required>
-                <button type="submit" name="create_type" class="btn btn-primary">
-                  <i class="fas fa-plus me-1"></i> Add
-                </button>
-              </div>
-            </form>
-          <?php endif; ?>
+  <?php if (!empty($error)): ?>
+    <div class="alert alert-danger"><?= $error ?></div>
+  <?php endif; ?>
 
-          <div class="list-group">
-            <?php foreach ($businessTypes as $type): ?>
-              <div class="list-group-item d-flex justify-content-between align-items-center">
-                <?= htmlspecialchars($type['type_name']) ?>
-                <div class="btn-group btn-group-sm">
-                  <a href="?edit_type=<?= $type['id'] ?>" class="btn btn-outline-primary">
-                    <i class="bi bi-pencil"></i>
-                  </a>
-                  <a href="?delete_type=<?= $type['id'] ?>" class="btn btn-outline-danger"
-                    onclick="return confirm('Delete this business type? This will affect all businesses using this type.')">
-                    <i class="bi bi-trash"></i>
-                  </a>
-                </div>
-              </div>
-            <?php endforeach; ?>
-          </div>
-        </div>
+  <form method="POST" enctype="multipart/form-data" class="card card-body mb-4">
+    <div class="row g-3">
+      <div class="col-md-6"><label>Name</label><input name="name" class="form-control" required value="<?= htmlspecialchars($biz['name'] ?? '') ?>"></div>
+      <div class="col-md-6"><label>Slug</label><input name="slug" class="form-control" value="<?= htmlspecialchars($biz['slug'] ?? '') ?>"></div>
+      <div class="col-md-6">
+        <label>Type</label>
+        <select name="type" class="form-select" required>
+          <option value="">Select type</option>
+          <?php foreach ($businessTypes as $t): ?>
+            <option value="<?= $t['type_name'] ?>" <?= (isset($biz['type']) && $biz['type'] == $t['type_name']) ? 'selected' : '' ?>>
+              <?= htmlspecialchars($t['type_name']) ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+      <div class="col-md-6"><label>SEO Title</label><input name="seo_title" class="form-control" maxlength="70" value="<?= htmlspecialchars($biz['seo_title'] ?? '') ?>"></div>
+      <div class="col-12"><label>Description</label><textarea name="description" class="form-control" rows="3" required><?= htmlspecialchars($biz['description'] ?? '') ?></textarea></div>
+      <div class="col-12"><label>Meta Description</label><textarea name="meta_description" class="form-control" maxlength="160" rows="2"><?= htmlspecialchars($biz['meta_description'] ?? '') ?></textarea></div>
+      <div class="col-md-6">
+        <label>Image (≤500KB)</label>
+        <input type="file" name="image" class="form-control">
+        <?php if (!empty($biz['image'])): ?>
+          <img src="../<?= $biz['image'] ?>" class="img-thumbnail mt-2" style="max-width:150px;">
+        <?php endif; ?>
+      </div>
+      <div class="col-12">
+        <button class="btn btn-primary"><?= $editing ? 'Update' : 'Add' ?> Business</button>
+        <?php if ($editing): ?><a href="business.php" class="btn btn-secondary ms-2">Cancel</a><?php endif; ?>
       </div>
     </div>
+  </form>
 
-    <!-- Main Business Form and Table -->
-    <div class="col-lg-8">
-      <div class="card shadow mb-4">
-        <div class="card-header bg-white py-3">
-          <h5 class="mb-0"><?= $editing ? 'Edit Business' : 'Add New Business' ?></h5>
+  <!-- Add Business Type -->
+  <div class="card mb-4">
+    <div class="card-header">Add Business Type</div>
+    <div class="card-body">
+      <form method="POST" class="row g-3">
+        <div class="col-md-6">
+          <input type="text" name="new_type" class="form-control" placeholder="New type name" required>
         </div>
-        <div class="card-body">
-          <form method="POST" enctype="multipart/form-data">
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" name="name" required
-                  value="<?= htmlspecialchars($biz['name'] ?? '') ?>">
-              </div>
-              <div class="col-md-6">
-                <label for="type" class="form-label">Type</label>
-                <select class="form-select" id="type" name="type" required>
-                  <option value="">Select a type</option>
-                  <?php foreach ($businessTypes as $type): ?>
-                    <option value="<?= htmlspecialchars($type['type_name']) ?>" <?= isset($biz['type']) && $biz['type'] == $type['type_name'] ? 'selected' : '' ?>>
-                      <?= htmlspecialchars($type['type_name']) ?>
-                    </option>
-                  <?php endforeach; ?>
-                </select>
-                <small class="text-muted">Can't find your type? Add it in the left panel</small>
-              </div>
-              <div class="col-12">
-                <label for="description" class="form-label">Description</label>
-                <textarea class="form-control" id="description" name="description" rows="3" required><?=
-                  htmlspecialchars($biz['description'] ?? '') ?></textarea>
-              </div>
-              <div class="col-12">
-                <label for="image" class="form-label">Image</label>
-                <input type="file" class="form-control" id="image" name="image">
-                <?php if (!empty($biz['image'])): ?>
-                  <div class="mt-3 d-flex align-items-center">
-                    <img src="../<?= $biz['image'] ?>" class="img-thumbnail me-3" style="max-width:150px;">
-                    <a href="../<?= $biz['image'] ?>" target="_blank" class="btn btn-sm btn-outline-primary">
-                      <i class="fas fa-external-link-alt me-1"></i> View Full Image
-                    </a>
-                  </div>
-                <?php endif; ?>
-              </div>
-              <div class="col-12">
-                <button type="submit" class="btn btn-primary me-2">
-                  <i class="fas fa-save me-1"></i> <?= $editing ? 'Update' : 'Add' ?> Business
-                </button>
-                <?php if ($editing): ?>
-                  <a href="business.php" class="btn btn-outline-secondary">
-                    <i class="fas fa-times me-1"></i> Cancel
-                  </a>
-                <?php endif; ?>
-              </div>
-            </div>
-          </form>
+        <div class="col-md-2">
+          <button type="submit" name="create_type" class="btn btn-success">Add Type</button>
         </div>
-      </div>
-
-      <div class="card shadow">
-        <div class="card-header bg-white py-3">
-          <h5 class="mb-0">Business List</h5>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <thead class="table-light">
-                <tr>
-                  <th>Name</th>
-                  <th>Type</th>
-                  <th>Image</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php foreach ($businesses as $b): ?>
-                  <tr>
-                    <td><?= htmlspecialchars($b['name']) ?></td>
-                    <td><?= htmlspecialchars($b['type']) ?></td>
-                    <td>
-                      <?php if ($b['image']): ?>
-                        <img src="../<?= $b['image'] ?>" class="img-thumbnail" style="max-width: 80px; height: auto;">
-                      <?php else: ?>
-                        <span class="text-muted">No image</span>
-                      <?php endif; ?>
-                    </td>
-                    <td>
-                      <div class="d-flex gap-2">
-                        <a href="?edit=<?= $b['id'] ?>" class="btn btn-sm btn-outline-primary">
-                          <i class="fas fa-edit"></i> Edit
-                        </a>
-                        <a href="?delete=<?= $b['id'] ?>" class="btn btn-sm btn-outline-danger"
-                          onclick="return confirm('Are you sure you want to delete this business?')">
-                          <i class="fas fa-trash-alt"></i> Delete
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                <?php endforeach; ?>
-              </tbody>
-            </table>
+      </form>
+      <hr>
+      <div class="row">
+        <?php foreach ($businessTypes as $t): ?>
+          <div class="col-md-3 d-flex justify-content-between align-items-center mb-2">
+            <?= htmlspecialchars($t['type_name']) ?>
+            <a href="?delete_type=<?= $t['id'] ?>" class="text-danger" onclick="return confirm('Delete this type?')">
+              <i class="bi bi-trash-fill"></i>
+            </a>
           </div>
-        </div>
+        <?php endforeach; ?>
       </div>
+    </div>
+  </div>
+
+  <!-- Business Table -->
+  <div class="card">
+    <div class="card-header">Business List</div>
+    <div class="card-body">
+      <table class="table">
+        <thead><tr><th>Name</th><th>Type</th><th>Actions</th></tr></thead>
+        <tbody>
+          <?php foreach ($businesses as $b): ?>
+            <tr>
+              <td><?= htmlspecialchars($b['name']) ?></td>
+              <td><?= htmlspecialchars($b['type']) ?></td>
+              <td>
+                <a href="?edit=<?= $b['id'] ?>" class="btn btn-sm btn-info">Edit</a>
+                <a href="?delete=<?= $b['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this business?')">Delete</a>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

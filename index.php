@@ -64,6 +64,26 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
           </a>
         </li>
         <li class="nav-item">
+          <a class="nav-link px-3" href="events.php">
+            <span class="d-flex align-items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-collection me-1" viewBox="0 0 16 16">
+                <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13z"/>
+              </svg>
+              Events
+            </span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3" href="businesses.php">
+            <span class="d-flex align-items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-collection me-1" viewBox="0 0 16 16">
+                <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13z"/>
+              </svg>
+              Business
+            </span>
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link px-3" href="about.php">
             <span class="d-flex align-items-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle me-1" viewBox="0 0 16 16">
@@ -306,6 +326,67 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
       </div>
     <?php endif; ?>
   </div>
+
+<?php
+// Fetch businesses
+$businessList = $pdo->query("SELECT * FROM businesses ORDER BY created_at DESC LIMIT 8")->fetchAll();
+?>
+<div class="container my-5 py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0" style="color: #fd7e14;">Businesses</h2>
+    <a href="businesses.php" class="btn btn-outline-orange">View All</a>
+  </div>
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    <?php foreach ($businessList as $biz): ?>
+      <div class="col">
+        <div class="card h-100 border-0 shadow-sm">
+          <img src="<?= htmlspecialchars($biz['image']) ?>" class="card-img-top" style="height: 200px; object-fit: cover;">
+          <div class="card-body">
+            <h5 class="card-title"><?= htmlspecialchars($biz['name']) ?></h5>
+            <p class="card-text text-muted"><?= htmlspecialchars($biz['type']) ?></p>
+            <p class="card-text text-truncate-3"><?= htmlspecialchars(substr(strip_tags($biz['description']), 0, 100)) ?>...</p>
+          </div>
+          <div class="card-footer bg-transparent border-0 pt-0">
+            <a href="business/<?= urlencode($biz['slug']) ?>" class="btn btn-sm btn-orange w-100">View Details</a>
+          </div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </div>
+</div>
+
+<?php
+// Fetch upcoming events (datetime greater than now)
+$events = $pdo->prepare("SELECT * FROM events WHERE event_datetime >= NOW() ORDER BY event_datetime ASC LIMIT 8");
+$events->execute();
+$upcoming = $events->fetchAll();
+?>
+<div class="container my-5 py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0" style="color: #fd7e14;">Upcoming Events</h2>
+    <a href="events.php" class="btn btn-outline-orange">View All</a>
+  </div>
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    <?php foreach ($upcoming as $event): ?>
+      <div class="col">
+        <div class="card h-100 border-0 shadow-sm">
+          <img src="<?= htmlspecialchars($event['image']) ?>" class="card-img-top" style="height: 200px; object-fit: cover;">
+          <div class="card-body">
+            <h5 class="card-title"><?= htmlspecialchars($event['name']) ?></h5>
+            <p class="card-text text-muted"><?= date('F j, Y, g:i A', strtotime($event['event_datetime'])) ?></p>
+            <p class="card-text text-truncate-3"><?= htmlspecialchars(substr(strip_tags($event['description']), 0, 100)) ?>...</p>
+          </div>
+          <div class="card-footer bg-transparent border-0 pt-0">
+            <a href="event/<?= urlencode($event['slug']) ?>" class="btn btn-sm btn-orange w-100">View Details</a>
+          </div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </div>
+</div>
+
+
+
 
   <!-- ADS SECTION -->
   <div class="container my-5">

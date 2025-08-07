@@ -1,29 +1,17 @@
 <?php
 require_once 'includes/db.php';
-
-$recaptchaSecret = "6LcPpZwrAAAAAIO-SvWIREIwlyebSKJQcyqB8SBY";
-$msg = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $name = $_POST['name'];
-  $contact = $_POST['contact'];
-  $story = $_POST['story'];
-  $recaptchaResponse = $_POST['g-recaptcha-response'];
-
-  // Verify reCAPTCHA
-  $verify = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$recaptchaSecret}&response={$recaptchaResponse}");
-  $captchaSuccess = json_decode($verify)->success;
-
-  if ($captchaSuccess) {
-    $stmt = $pdo->prepare("INSERT INTO story_submissions (name, contact, story) VALUES (?, ?, ?)");
-    $stmt->execute([$name, $contact, $story]);
-    $msg = "Thank you for sharing your story!";
-  } else {
-    $msg = "reCAPTCHA failed. Please verify you're not a robot.";
-  }
+$filterType = $_GET['type'] ?? '';
+$query = "SELECT * FROM businesses";
+$params = [];
+if ($filterType) {
+  $query .= " WHERE type = ?";
+  $params[] = $filterType;
 }
+$businesses = $pdo->prepare($query);
+$businesses->execute($params);
+$types = $pdo->query("SELECT DISTINCT type FROM businesses")->fetchAll(PDO::FETCH_COLUMN);
+include 'includes/header.php';
 ?>
-<?php include 'includes/header.php'; ?>
 
 <!-- LOGO and TOP ADS -->
 <div class="container-fluid text-center py-4 bg-white">
@@ -68,8 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link px-3" href="category.php">
-            <span class="d-flex align-items-center">
+          <a class="nav-link px-3 items-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-collection me-1" viewBox="0 0 16 16">
                 <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13z"/>
               </svg>
@@ -88,7 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link px-3" href="businesses.php">
+          <a class="nav-link px-3 active" href="category.php">
+            <span class="d-flex align-" href="businesses.php">
             <span class="d-flex align-items-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-collection me-1" viewBox="0 0 16 16">
                 <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13z"/>
@@ -109,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link px-3 active " href="list-story.php">
+          <a class="nav-link px-3" href="list-story.php">
             <span class="d-flex align-items-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square me-1" viewBox="0 0 16 16">
                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
@@ -134,79 +122,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 </nav>
 
-<!-- Main Content Area -->
-<div class="container-fluid d-flex flex-column flex-grow-1 bg-light">
-  <div class="container my-5 py-4 flex-grow-1">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="card shadow-sm border-0">
-          <div class="card-body p-4 p-md-5">
-            <h3 class="mb-4 text-center" style="color: #FF6B00;">Share Your Story</h3>
-            <?php if (!empty($msg)) echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>$msg<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"; ?>
-            
-            <form method="POST" class="needs-validation" novalidate>
-              <div class="row g-3">
-                <div class="col-md-6 mb-3">
-                  <label for="name" class="form-label">Your Name</label>
-                  <input type="text" name="name" class="form-control" id="name" placeholder="John Doe" required>
-                  <div class="invalid-feedback">Please provide your name.</div>
-                </div>
-                
-                <div class="col-md-6 mb-3">
-                  <label for="email" class="form-label">Email Address</label>
-                  <input type="email" name="email" class="form-control" id="email" placeholder="you@example.com" required>
-                  <div class="invalid-feedback">Please provide a valid email.</div>
-                </div>
-                
-                <div class="col-12 mb-3">
-                  <label for="phone" class="form-label">Phone Number</label>
-                  <input type="tel" name="phone" class="form-control" id="phone" placeholder="+91 XXXXXXXXXX">
-                </div>
-                
-                <div class="col-12 mb-3">
-                  <label for="title" class="form-label">Story Title</label>
-                  <input type="text" name="title" class="form-control" id="title" placeholder="My Amazing Journey" required>
-                  <div class="invalid-feedback">Please provide a title for your story.</div>
-                </div>
-                
-                <div class="col-12 mb-4">
-                  <label for="story" class="form-label">Your Story</label>
-                  <textarea name="story" class="form-control" id="story" rows="6" placeholder="Tell us your inspiring story..." required></textarea>
-                  <div class="invalid-feedback">Please write your story.</div>
-                  <div class="form-text">Minimum 300 characters. HTML tags are not allowed.</div>
-                </div>
-                <div class="mb-3 col-12 d-flex justify-content-center align-items-center">
-                  <div class="g-recaptcha" data-sitekey="6LcPpZwrAAAAAH0sFt-eMbBMuE1uwMtxaM2P-a_e"></div>
-                </div>
-
-                <div class="col-12 text-center">
-                  <button class="btn btn-lg px-5 text-white" style="background-color: #FF6B00;" type="submit">Submit Story</button>
-                </div>
-              </div>
-            </form>
+<div class="container my-5">
+  <h2>All Businesses</h2>
+  <form class="mb-4">
+    <label>Filter by Type:</label>
+    <select name="type" onchange="this.form.submit()" class="form-select w-auto d-inline-block ms-2">
+      <option value="">All Types</option>
+      <?php foreach ($types as $t): ?>
+        <option value="<?= htmlspecialchars($t) ?>" <?= $t === $filterType ? 'selected' : '' ?>><?= htmlspecialchars($t) ?></option>
+      <?php endforeach; ?>
+    </select>
+  </form>
+  <div class="row g-4">
+    <?php foreach ($businesses as $biz): ?>
+      <div class="col">
+        <div class="card h-100 border-0 shadow-sm">
+          <img src="<?= $biz['image'] ?>" class="card-img-top" style="height: 200px; object-fit: cover;">
+          <div class="card-body">
+            <h5 class="card-title"><?= htmlspecialchars($biz['name']) ?></h5>
+            <p class="card-text text-muted"><?= htmlspecialchars($biz['type']) ?></p>
+            <p class="card-text text-truncate-3"><?= htmlspecialchars(substr(strip_tags($biz['description']), 0, 100)) ?>...</p>
+          </div>
+          <div class="card-footer bg-transparent border-0 pt-0">
+            <a href="business-view.php?id=<?= $biz['id'] ?>" class="btn btn-sm btn-orange w-100">View Details</a>
           </div>
         </div>
       </div>
-    </div>
+    <?php endforeach; ?>
   </div>
 </div>
 
 <?php include 'includes/footer.php'; ?>
 
 <style>
-  body {
+     body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     background-color: #f8f9fa;
   }
   
-  .container-fluid.flex-grow-1 {
-    flex: 1 0 auto;
-  }
-  
   .navbar {
-    margin-bottom: 2rem;
     transition: all 0.3s ease;
   }
   
@@ -232,7 +188,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   .nav-link.active {
     background-color: rgba(255,255,255,0.2);
     font-weight: 600;
-    text-decoration: none;
   }
   
   .nav-link.active:before {
@@ -247,22 +202,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     border-radius: 3px;
   }
   
-  textarea.form-control {
-    min-height: 200px;
+  .bg-orange {
+    background-color: #fd7e14 !important;
   }
   
-  .card {
-    border-radius: 10px;
-    border: none;
+  .btn-orange {
+    background-color: #fd7e14;
+    color: white;
   }
   
-  .form-control:focus {
+  .btn-orange:hover {
+    background-color: #e67300;
+    color: white;
+  }
+  
+  .btn-outline-orange {
     border-color: #fd7e14;
-    box-shadow: 0 0 0 0.25rem rgba(255, 107, 0, 0.25);
+    color: #fd7e14;
   }
   
-  .btn:hover {
-    background-color: #e67300 !important;
+  .btn-outline-orange:hover {
+    background-color: #fd7e14;
+    color: white;
+  }
+  
+  .story-card {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .story-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+  
+  .card-img-overlay .badge {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .story-card:hover .card-img-overlay .badge {
+    opacity: 1;
+  }
+  
+  .text-truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   @media (max-width: 992px) {
@@ -276,35 +265,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   }
 </style>
-
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
-<script>
-// Form validation example
-(function () {
-  'use strict'
-  
-  var forms = document.querySelectorAll('.needs-validation')
-  
-  Array.prototype.slice.call(forms)
-    .forEach(function (form) {
-      form.addEventListener('submit', function (event) {
-        if (!form.checkValidity()) {
-          event.preventDefault()
-          event.stopPropagation()
-        }
-        
-        form.classList.add('was-validated')
-      }, false)
-    })
-})();
-
-// Navbar scroll effect
-window.addEventListener('scroll', function() {
-  const navbar = document.querySelector('.navbar');
-  if (window.scrollY > 50) {
-    navbar.classList.add('scrolled');
-  } else {
-    navbar.classList.remove('scrolled');
-  }
-});
-</script>
