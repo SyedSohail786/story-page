@@ -1,14 +1,27 @@
 <?php
 require_once 'includes/db.php';
-$slug = $_GET['slug'] ?? '';
-$stmt = $pdo->prepare("SELECT * FROM businesses WHERE slug = ?");
-$stmt->execute([$slug]);
-$biz = $stmt->fetch();
-if (!$biz) { header("HTTP/1.0 404 Not Found"); exit; }
 
-$metaTitle = htmlspecialchars($biz['seo_title'] ?: $biz['name']);
-$metaDesc  = htmlspecialchars($biz['meta_description'] ?: substr(strip_tags($biz['description']), 0, 150));
+// Check if category filter is applied
+$categoryFilter = isset($_GET['cat']) ? $_GET['cat'] : null;
+
+// Build the query based on filter
+$query = "SELECT s.* FROM stories s WHERE s.is_popular = 1";
+if ($categoryFilter) {
+    $query .= " JOIN story_categories sc ON s.id = sc.story_id 
+               JOIN categories c ON sc.category_id = c.id 
+               WHERE c.slug = :category_slug";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute(['category_slug' => $categoryFilter]);
+    $popularStories = $stmt->fetchAll();
+} else {
+    $popularStories = $pdo->query($query . " ORDER BY s.created_at DESC")->fetchAll();
+}
+
+$categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
+$metaTitle = "Popular Stories - StoryPortal";
+$metaDesc = "Browse the most popular and trending stories shared by our community.";
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,13 +29,14 @@ $metaDesc  = htmlspecialchars($biz['meta_description'] ?: substr(strip_tags($biz
   <title><?= $metaTitle ?></title>
   <meta name="description" content="<?= $metaDesc ?>">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="bg-light">
-  <?php include 'includes/header.php'; ?>
-   <!-- LOGO and TOP ADS -->
+
+<?php include 'includes/header.php'; ?>
+<!-- LOGO and TOP ADS -->
 <div class="container-fluid text-center py-4 bg-white">
   <div class="row align-items-center">
     <div class="col-md-2 d-none d-md-block">
@@ -120,7 +134,7 @@ $metaDesc  = htmlspecialchars($biz['meta_description'] ?: substr(strip_tags($biz
           <a class="nav-link px-3" href="contact.php">
             <span class="d-flex align-items-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope me-1" viewBox="0 0 16 16">
-                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741zM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
               </svg>
               Contact
             </span>
@@ -131,19 +145,80 @@ $metaDesc  = htmlspecialchars($biz['meta_description'] ?: substr(strip_tags($biz
   </div>
 </nav>
 
-  <main class="container my-5">
-    <a href="businesses.php" class="btn btn-outline-secondary mb-4">
-      <i class="bi bi-arrow-left"></i> Back to Businesses
-    </a>
-    <h1 class="display-5"><?= htmlspecialchars($biz['name']) ?></h1>
-    <p class="text-muted"><strong>Type:</strong> <?= htmlspecialchars($biz['type']) ?></p>
-    <?php if ($biz['image']): ?>
-      <img src="<?= $biz['image'] ?>" alt="<?= htmlspecialchars($biz['name']) ?>" class="img-fluid mb-4 rounded">
-    <?php endif; ?>
-    <div class="bg-white p-4 rounded shadow-sm"><?= nl2br(htmlspecialchars($biz['description'])) ?></div>
-  </main>
+<main class="container my-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0 text-orange">
+      <i class="bi bi-fire me-2"></i> Popular Stories
+    </h2>
+    
+    <!-- Category Filter Dropdown -->
+    <div class="dropdown">
+            <button class="btn btn-outline-orange dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter me-1" viewBox="0 0 16 16">
+                <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+              </svg>
+              Filter by Category
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+              <li><a class="dropdown-item <?= !$cat_id ? 'active' : '' ?>" href="category.php">All Categories</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <?php foreach ($categories as $cat): ?>
+                <li>
+                  <a class="dropdown-item <?= ($cat['slug'] == $cat_slug) ? 'active' : '' ?>" href="<?= $cat['slug'] ?>">
+                    <?= htmlspecialchars($cat['name']) ?>
+                  </a>
+                </li>
+              <?php endforeach; ?>
+            </ul>
+          </div>
+  </div>
 
-  <?php include 'includes/footer.php'; ?>
-  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <div class="row row-cols-1 row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+    <?php if (!empty($popularStories)): ?>
+      <?php foreach ($popularStories as $story): ?>
+        <div class="col">
+          <div class="card h-100 shadow-sm border-0">
+            <?php if (!empty($story['thumbnail'])): ?>
+              <img src="<?= htmlspecialchars($story['thumbnail']) ?>" class="card-img-top" style="height: 200px; object-fit: cover;">
+            <?php endif; ?>
+            <div class="card-body">
+              <h5 class="card-title"><?= htmlspecialchars($story['title']) ?></h5>
+              <p class="card-text text-muted small"><?= date('F j, Y', strtotime($story['created_at'])) ?></p>
+              <p class="card-text text-truncate"><?= htmlspecialchars(substr(strip_tags($story['content']), 0, 100)) ?>...</p>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+              <a href="story/<?= htmlspecialchars($story['slug']) ?>" class="btn btn-sm btn-orange w-100">Read More</a>
+            </div>
+          </div>
+        </div>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <div class="col-12">
+        <div class="alert alert-warning text-center">No popular stories found.</div>
+      </div>
+    <?php endif; ?>
+  </div>
+</main>
+
+<?php include 'includes/footer.php'; ?>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Close navbar when clicking a link
+    const navLinks = document.querySelectorAll('.nav-link');
+    const navbarToggler = document.querySelector('.navbar-toggler');
+    const navbarCollapse = document.querySelector('.navbar-collapse');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (navbarCollapse.classList.contains('show')) {
+                navbarToggler.click();
+            }
+        });
+    });
+});
+</script>
 </body>
 </html>
