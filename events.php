@@ -13,9 +13,25 @@ $query .= " ORDER BY event_datetime ASC";
 $stmt = $pdo->prepare($query);
 $stmt->execute($params);
 $events = $stmt->fetchAll();
-include 'includes/header.php';
+
+$metaTitle = "Upcoming Events - StoryPortal";
+$metaDesc = "Browse all upcoming events in your area. Find events happening today, this week, or view all events.";
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><?= $metaTitle ?></title>
+  <meta name="description" content="<?= $metaDesc ?>">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-light">
+
+<?php include 'includes/header.php'; ?>
 <!-- LOGO and TOP ADS -->
 <div class="container-fluid text-center py-4 bg-white">
   <div class="row align-items-center">
@@ -71,8 +87,9 @@ include 'includes/header.php';
         <li class="nav-item">
           <a class="nav-link px-3 active" href="events.php">
             <span class="d-flex align-items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-collection me-1" viewBox="0 0 16 16">
-                <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13z"/>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-event me-1" viewBox="0 0 16 16">
+                <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
+                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
               </svg>
               Events
             </span>
@@ -81,8 +98,8 @@ include 'includes/header.php';
         <li class="nav-item">
           <a class="nav-link px-3" href="businesses.php">
             <span class="d-flex align-items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-collection me-1" viewBox="0 0 16 16">
-                <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13z"/>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shop me-1" viewBox="0 0 16 16">
+                <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.371 2.371 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976l2.61-3.045zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0zM1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5zM4 15h3v-5H4v5zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3zm3 0h-2v3h2v-3z"/>
               </svg>
               Business
             </span>
@@ -125,146 +142,83 @@ include 'includes/header.php';
   </div>
 </nav>
 
+<main class="container my-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0 text-orange">
+      <i class="bi bi-calendar-event me-2"></i> Upcoming Events
+    </h2>
+    
+    <!-- Date Filter Dropdown -->
+    <form class="mb-4">
+      <div class="input-group">
+        <label class="input-group-text" for="dateFilter">
+          <i class="bi bi-filter me-1"></i> Filter
+        </label>
+        <select name="when" id="dateFilter" onchange="this.form.submit()" class="form-select">
+          <option value="">All Events</option>
+          <option value="today" <?= $dateFilter==='today'?'selected':'' ?>>Today</option>
+          <option value="this_week" <?= $dateFilter==='this_week'?'selected':'' ?>>This Week</option>
+        </select>
+      </div>
+    </form>
+  </div>
 
-<div class="container my-5">
-  <h2>All Events</h2>
-  <form class="mb-4">
-    <label>Show:</label>
-    <select name="when" onchange="this.form.submit()" class="form-select w-auto d-inline-block ms-2">
-      <option value="">All</option>
-      <option value="today" <?= $dateFilter==='today'?'selected':'' ?>>Today</option>
-      <option value="this_week" <?= $dateFilter==='this_week'?'selected':'' ?>>This Week</option>
-    </select>
-  </form>
-  <div class="row g-4">
-    <?php foreach ($events as $event): ?>
-      <div class="col">
-        <div class="card h-100 border-0 shadow-sm">
-          <img src="<?= $event['image'] ?>" class="card-img-top" style="height: 200px; object-fit: cover;">
-          <div class="card-body">
-            <h5 class="card-title"><?= htmlspecialchars($event['name']) ?></h5>
-            <p class="card-text text-muted"><?= date('F j, Y, g:i A', strtotime($event['event_datetime'])) ?></p>
-            <p class="card-text text-truncate-3"><?= htmlspecialchars(substr(strip_tags($event['description']), 0, 100)) ?>...</p>
-          </div>
-          <div class="card-footer bg-transparent border-0 pt-0">
-            <a href="event.php?id=<?= $event['id'] ?>" class="btn btn-sm btn-orange w-100">View Details</a>
+  <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+    <?php if (!empty($events)): ?>
+      <?php foreach ($events as $event): ?>
+        <div class="col">
+          <div class="card h-100 shadow-sm border-0 story-card">
+            <img src="<?= htmlspecialchars($event['image']) ?>" class="card-img-top" style="height: 200px; object-fit: cover;" alt="<?= htmlspecialchars($event['name']) ?>">
+            <div class="card-body">
+              <h5 class="card-title"><?= htmlspecialchars($event['name']) ?></h5>
+              <p class="card-text text-muted small">
+                <i class="bi bi-calendar-event me-1"></i>
+                <?= date('F j, Y, g:i A', strtotime($event['event_datetime'])) ?>
+              </p>
+              <p class="card-text text-truncate-3"><?= htmlspecialchars(substr(strip_tags($event['description']), 0, 100)) ?> ...</p> 
+            </div> 
+            <div class="card-footer bg-transparent border-0">
+              <a href="event.php?id=<?= $event['id'] ?>" class="btn btn-sm btn-orange w-100">View Details</a>
+            </div>
           </div>
         </div>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <div class="col-12">
+        <div class="alert alert-warning text-center">No events found. <?= $dateFilter ? 'Try removing the date filter.' : '' ?></div>
       </div>
-    <?php endforeach; ?>
+    <?php endif; ?>
   </div>
-</div>
+</main>
 
 <?php include 'includes/footer.php'; ?>
-
-<style>
-     body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: #f8f9fa;
-  }
-  
-  .navbar {
-    transition: all 0.3s ease;
-  }
-  
-  .navbar.scrolled {
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    background: rgba(253, 126, 20, 0.95) !important;
-    backdrop-filter: blur(10px);
-  }
-  
-  .nav-link {
-    position: relative;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    border-radius: 8px;
-    margin: 0 2px;
-  }
-  
-  .nav-link:hover {
-    background-color: rgba(255,255,255,0.1);
-    transform: translateY(-2px);
-  }
-  
-  .nav-link.active {
-    background-color: rgba(255,255,255,0.2);
-    font-weight: 600;
-  }
-  
-  .nav-link.active:before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 20px;
-    height: 3px;
-    background-color: white;
-    border-radius: 3px;
-  }
-  
-  .bg-orange {
-    background-color: #fd7e14 !important;
-  }
-  
-  .btn-orange {
-    background-color: #fd7e14;
-    color: white;
-  }
-  
-  .btn-orange:hover {
-    background-color: #e67300;
-    color: white;
-  }
-  
-  .btn-outline-orange {
-    border-color: #fd7e14;
-    color: #fd7e14;
-  }
-  
-  .btn-outline-orange:hover {
-    background-color: #fd7e14;
-    color: white;
-  }
-  
-  .story-card {
-    transition: all 0.3s ease;
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  
-  .story-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-  }
-  
-  .card-img-overlay .badge {
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  
-  .story-card:hover .card-img-overlay .badge {
-    opacity: 1;
-  }
-  
-  .text-truncate-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  @media (max-width: 992px) {
-    .nav-link {
-      margin: 2px 0;
-      padding: 8px 12px !important;
-    }
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Close navbar when clicking a link
+    const navLinks = document.querySelectorAll('.nav-link');
+    const navbarToggler = document.querySelector('.navbar-toggler');
+    const navbarCollapse = document.querySelector('.navbar-collapse');
     
-    .nav-link.active:before {
-      display: none;
-    }
-  }
-</style>
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (navbarCollapse.classList.contains('show')) {
+                navbarToggler.click();
+            }
+        });
+    });
+    
+    // Add shadow to navbar on scroll
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+            document.querySelector('.navbar').classList.add('scrolled');
+        } else {
+            document.querySelector('.navbar').classList.remove('scrolled');
+        }
+    });
+});
+</script>
+</body>
+</html>
