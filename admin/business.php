@@ -52,6 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
     $description = $_POST['description'];
     $seo_title = $_POST['seo_title'];
     $meta_description = $_POST['meta_description'];
+    $address = $_POST['address'];
+    $phone = $_POST['phone'];
+    $email = $_POST['email'];
+    $website = $_POST['website'];
 
     $image = $biz['image'] ?? '';
     if (!empty($_FILES['image']['name'])) {
@@ -65,12 +69,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
 
     if (!isset($error)) {
         if ($editing) {
-            $pdo->prepare("UPDATE businesses SET name=?, slug=?, type=?, description=?, image=?, seo_title=?, meta_description=? WHERE id=?")
-                ->execute([$name, $slug, $type, $description, $image, $seo_title, $meta_description, $biz['id']]);
+            $pdo->prepare("UPDATE businesses SET name=?, slug=?, type=?, description=?, image=?, seo_title=?, meta_description=?, address=?, phone=?, email=?, website=? WHERE id=?")
+                ->execute([$name, $slug, $type, $description, $image, $seo_title, $meta_description, $address, $phone, $email, $website, $biz['id']]);
         } else {
-            $pdo->prepare("INSERT INTO businesses (name, slug, type, description, image, seo_title, meta_description)
-                           VALUES (?, ?, ?, ?, ?, ?, ?)")
-                ->execute([$name, $slug, $type, $description, $image, $seo_title, $meta_description]);
+            $pdo->prepare("INSERT INTO businesses (name, slug, type, description, image, seo_title, meta_description, address, phone, email, website)
+                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+                ->execute([$name, $slug, $type, $description, $image, $seo_title, $meta_description, $address, $phone, $email, $website]);
         }
         header("Location: business.php");
         exit;
@@ -106,6 +110,12 @@ $businesses = $pdo->query("SELECT * FROM businesses ORDER BY created_at DESC")->
       <div class="col-md-6"><label>SEO Title</label><input name="seo_title" class="form-control" maxlength="70" value="<?= htmlspecialchars($biz['seo_title'] ?? '') ?>"></div>
       <div class="col-12"><label>Description</label><textarea name="description" class="form-control" rows="3" required><?= htmlspecialchars($biz['description'] ?? '') ?></textarea></div>
       <div class="col-12"><label>Meta Description</label><textarea name="meta_description" class="form-control" maxlength="160" rows="2"><?= htmlspecialchars($biz['meta_description'] ?? '') ?></textarea></div>
+
+      <div class="col-md-6"><label>Address</label><input name="address" class="form-control" value="<?= htmlspecialchars($biz['address'] ?? '') ?>"></div>
+      <div class="col-md-6"><label>Phone</label><input name="phone" class="form-control" value="<?= htmlspecialchars($biz['phone'] ?? '') ?>"></div>
+      <div class="col-md-6"><label>Email</label><input type="email" name="email" class="form-control" value="<?= htmlspecialchars($biz['email'] ?? '') ?>"></div>
+      <div class="col-md-6"><label>Website</label><input type="url" name="website" class="form-control" value="<?= htmlspecialchars($biz['website'] ?? '') ?>"></div>
+
       <div class="col-md-6">
         <label>Image (≤500KB)</label>
         <input type="file" name="image" class="form-control">
