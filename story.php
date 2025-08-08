@@ -142,11 +142,11 @@ $metaDesc = $story['meta_description'] ?: substr(strip_tags($story['content']), 
 <!-- Main Content -->
 <main class="container my-4">
   <!-- Back Button -->
-  <div class="mb-4">
+  <!-- <div class="mb-4">
     <a href="index.php" class="btn btn-outline-secondary rounded-pill px-4 py-2">
       <i class="bi bi-arrow-left me-2"></i> Back
     </a>
-  </div>
+  </div> -->
 
   <!-- Story Content -->
   <article class="bg-white rounded-3 shadow-sm p-4 p-md-5 mb-4">
@@ -193,7 +193,7 @@ $metaDesc = $story['meta_description'] ?: substr(strip_tags($story['content']), 
           <div class="col-6 col-md-4 col-lg-3">
             <img src="<?= htmlspecialchars($img) ?>" 
                  class="img-fluid rounded shadow-sm gallery-zoomable" 
-                 style="cursor: zoom-in; height: 200px; width: 100%; object-fit: cover;"
+                 style="cursor: zoom-in; height: 120px; width: 100%; object-fit: cover;"
                  loading="lazy">
           </div>
         <?php endforeach; ?>
