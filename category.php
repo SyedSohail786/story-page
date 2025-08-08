@@ -135,86 +135,85 @@ $stories = $stmt->fetchAll();
 <div class="container-fluid py-5" style="background-color: #f8f9fa;">
   <div class="container">
     <div class="row">
-      <div class="col-12">
-        <!-- Page Header -->
-        <div class="d-flex justify-content-between align-items-center mb-5">
-          <h2 class="mb-0" style="color: #fd7e14;">
-            <?= isset($category) ? htmlspecialchars($category['name']) : 'All Stories' ?>
-            <?php if(isset($category)): ?>
-              <small class="text-muted d-block mt-1"><?= htmlspecialchars($category['description']) ?></small>
-            <?php endif; ?>
-          </h2>
-          
-          <!-- Category Selector -->
-          <div class="dropdown">
-            <button class="btn btn-outline-orange dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter me-1" viewBox="0 0 16 16">
-                <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
-              </svg>
-              Filter by Category
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
-              <li><a class="dropdown-item <?= !$cat_id ? 'active' : '' ?>" href="category.php">All Categories</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <?php foreach ($categories as $cat): ?>
-                <li>
-                  <a class="dropdown-item <?= ($cat['slug'] == $cat_slug) ? 'active' : '' ?>" href="<?= $cat['slug'] ?>">
-                    <?= htmlspecialchars($cat['name']) ?>
-                  </a>
-                </li>
-              <?php endforeach; ?>
-            </ul>
+      <div class="col-12 p-0">
+  <!-- Page Header - Improved for mobile -->
+  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-3">
+    <div>
+      <h2 class="mb-0" style="color: #fd7e14;">
+        <?= isset($category) ? htmlspecialchars($category['name']) : 'All Stories' ?>
+        <?php if(isset($category)): ?>
+          <small class="text-muted d-block mt-1 fs-6"><?= htmlspecialchars($category['description']) ?></small>
+        <?php endif; ?>
+      </h2>
+    </div>
+    
+    <!-- Category Selector - Made more compact for mobile -->
+    <div class="dropdown">
+      <button class="btn btn-outline-orange btn-sm dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-filter me-1" viewBox="0 0 16 16">
+          <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+        </svg>
+        <span class="d-none d-sm-inline">Filter by</span>
+        <span class="d-sm-none">Filter</span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+        <li><a class="dropdown-item <?= !$cat_id ? 'active' : '' ?>" href="category.php">All Categories</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <?php foreach ($categories as $cat): ?>
+          <li>
+            <a class="dropdown-item <?= ($cat['slug'] == $cat_slug) ? 'active' : '' ?>" href="<?= $cat['slug'] ?>">
+              <?= htmlspecialchars($cat['name']) ?>
+            </a>
+          </li>
+        <?php endforeach; ?>
+      </ul>
+    </div>
+  </div>
+  
+  <!-- Stories Grid - Optimized for mobile -->
+  <?php if (count($stories) > 0): ?>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+      <?php foreach ($stories as $s): ?>
+        <div class="col">
+          <div class="card h-100 border-0 shadow-sm story-card">
+            <div class="position-relative">
+              <img src="<?= $s['thumbnail'] ?>" class="card-img-top" style="height:160px; object-fit:cover;">
+              <div class="card-img-overlay d-flex align-items-end p-0">
+                <span class="badge bg-orange text-white mb-2 ms-2"><?= htmlspecialchars($categories[array_search($s['category_id'], array_column($categories, 'id'))]['name']) ?? 'Uncategorized' ?></span> 
+              </div>
+            </div>
+            <div class="card-body px-3">
+              <h5 class="card-title fs-6 mb-1"><?= htmlspecialchars($s['title']) ?></h5>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0 px-3 pb-3">
+              <a href="story/<?= urlencode($s['slug']) ?>" class="btn btn-sm btn-orange w-100 py-2">
+                Read Story
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-arrow-right ms-1" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
-        
-        <!-- Stories Grid -->
-        <?php if (count($stories) > 0): ?>
-          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-            <?php foreach ($stories as $s): ?>
-              <div class="col">
-                <div class="card h-100 border-0 shadow-sm story-card">
-                  <div class="position-relative">
-                    <img src="<?= $s['thumbnail'] ?>" class="card-img-top" style="height:200px; object-fit:cover;">
-                    <div class="card-img-overlay d-flex align-items-end p-0">
-                      <span class="badge bg-orange text-white mb-2 ms-2"><?= htmlspecialchars($categories[array_search($s['category_id'], array_column($categories, 'id'))]['name']) ?? 'Uncategorized' ?></span> 
-                    </div>
-                  </div>
-                  <div class="card-body">
-                    <h5 class="card-title"><?= htmlspecialchars($s['title']) ?></h5>
-                    <p class="card-text text-muted small">
-                      <?= date('F j, Y', strtotime($s['created_at'])) ?>
-                    </p>
-                    <p class="card-text text-truncate-3"><?= strip_tags(substr($s['content'], 0, 100)) ?>...</p>
-                  </div>
-                  <div class="card-footer bg-transparent border-0 pt-0">
-                    <a href="story/<?= urlencode($s['slug']) ?>"  class="btn btn-sm btn-orange w-100">
-                      Read Story
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-1" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            <?php endforeach; ?>
-          </div>
-        <?php else: ?>
-          <div class="text-center py-5">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#fd7e14" class="bi bi-book" viewBox="0 0 16 16">
-              <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"/>
-            </svg>
-            <h4 class="mt-3" style="color: #fd7e14;">No stories found</h4>
-            <p class="text-muted">There are currently no stories in this category.</p>
-            <a href="list-story.php" class="btn btn-orange mt-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square me-1" viewBox="0 0 16 16">
-                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-              </svg>
-              Share Your Story
-            </a>
-          </div>
-        <?php endif; ?>
-      </div>
+      <?php endforeach; ?>
+    </div>
+  <?php else: ?>
+    <div class="text-center py-5">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#fd7e14" class="bi bi-book" viewBox="0 0 16 16">
+        <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"/>
+      </svg>
+      <h4 class="mt-3" style="color: #fd7e14;">No stories found</h4>
+      <p class="text-muted">There are currently no stories in this category.</p>
+      <a href="list-story.php" class="btn btn-orange btn-sm mt-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-pencil-square me-1" viewBox="0 0 16 16">
+          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+          <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+        </svg>
+        Share Your Story
+      </a>
+    </div>
+  <?php endif; ?>
+</div>
     </div>
   </div>
 </div>
