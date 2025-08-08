@@ -138,7 +138,7 @@ $metaDesc  = htmlspecialchars($event['meta_description'] ?: substr(strip_tags($e
   </a> -->
   
   <!-- Event Header -->
-  <div class="d-flex flex-column flex-md-row gap-4 mb-5">
+  <div class="d-flex flex-column flex-md-row gap-4">
     <?php if ($event['image']): ?>
       <div class="flex-shrink-0" style="max-width: 400px;">
         <img src="<?= $event['image'] ?>" 
