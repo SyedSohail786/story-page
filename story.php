@@ -141,60 +141,68 @@ $metaDesc = $story['meta_description'] ?: substr(strip_tags($story['content']), 
 
 <!-- Main Content -->
 <main class="container my-4">
-  <!-- Back Button -->
-  <!-- <div class="mb-4">
-    <a href="index.php" class="btn btn-outline-secondary rounded-pill px-4 py-2">
-      <i class="bi bi-arrow-left me-2"></i> Back
-    </a>
-  </div> -->
-
-  <!-- Story Content -->
-  <article class="bg-white rounded-3 shadow-sm p-4 p-md-5 mb-4">
-    <!-- Story Header -->
-    <header class="mb-4">
-      <h1 class="display-5 fw-bold mb-3"><?= htmlspecialchars($story['title']) ?></h1>
-      <div class="d-flex align-items-center text-muted mb-3">
-        <i class="bi bi-calendar me-2"></i>
-        <span>Posted on <?= date('F j, Y', strtotime($story['created_at'])) ?></span>
+  <!-- Story Content - Left Image Layout -->
+  <article class="bg-white rounded-4 shadow-sm p-4 p-md-5 mb-4 border-0">
+    <div class="row g-4">
+      <!-- Left Column - Image -->
+      <div class="col-md-4">
+        <?php if (!empty($story['thumbnail'])): ?>
+          <figure class="mb-0 overflow-hidden rounded-3">
+            <img src="<?= htmlspecialchars($story['thumbnail']) ?>" 
+                 class="img-fluid w-100" 
+                 alt="<?= htmlspecialchars($story['title']) ?>"
+                 style="height: 250px; object-fit: cover;"
+                 loading="lazy">
+          </figure>
+        <?php endif; ?>
       </div>
-    </header>
+      
+      <!-- Right Column - Content -->
+      <div class="col-md-8">
+        <!-- Story Header -->
+        <header class="mb-4">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <span class="badge bg-orange text-white"><?= htmlspecialchars($story['category_name'] ?? 'General') ?></span>
+            <span class="text-muted small d-flex align-items-center">
+              <i class="bi bi-calendar me-1"></i>
+              <?= date('F j, Y', strtotime($story['created_at'])) ?>
+            </span>
+          </div>
+          <h1 class="display-5 fw-bold mb-3"><?= htmlspecialchars($story['title']) ?></h1>
+        </header>
 
-    <!-- Featured Image -->
-    <?php if (!empty($story['thumbnail'])): ?>
-      <figure class="mb-4">
-        <img src="<?= htmlspecialchars($story['thumbnail']) ?>" 
-             class="img-fluid rounded w-100" 
-             alt="<?= htmlspecialchars($story['title']) ?>"
-             style="max-height: 500px; object-fit: cover;"
-             loading="lazy">
-      </figure>
-    <?php endif; ?>
-
-    <!-- Story Content -->
-    <div class="content fs-5 lh-base">
-      <?php
-      $paragraphs = preg_split('/\r\n|\r|\n/', trim($story['content']));
-      foreach ($paragraphs as $para) {
-        if (trim($para) !== '') {
-          echo '<p>' . htmlspecialchars($para) . '</p>';
-        }
-      }
-      ?>
+        <!-- Story Content -->
+        <div class="content lh-base">
+          <?php
+          $paragraphs = preg_split('/\r\n|\r|\n/', trim($story['content']));
+          foreach ($paragraphs as $para) {
+            if (trim($para) !== '') {
+              echo '<p class="mb-3">' . htmlspecialchars($para) . '</p>';
+            }
+          }
+          ?>
+        </div>
+      </div>
     </div>
   </article>
 
   <!-- Gallery Section -->
   <?php if (!empty($story['gallery'])): 
     $gallery = json_decode($story['gallery']); ?>
-    <section class="bg-white rounded-3 shadow-sm p-4 p-md-5 mb-4">
-      <h2 class="h4 mb-4 pb-2 border-bottom">Gallery</h2>
+    <section class="bg-white rounded-4 shadow-sm p-4 p-md-5 mb-4 border-0">
+      <h2 class="h4 mb-4 pb-2 border-bottom d-flex align-items-center">
+        <i class="bi bi-images text-orange me-2"></i>
+        Gallery
+      </h2>
       <div class="row g-3">
         <?php foreach ($gallery as $img): ?>
           <div class="col-6 col-md-4 col-lg-3">
-            <img src="<?= htmlspecialchars($img) ?>" 
-                 class="img-fluid rounded shadow-sm gallery-zoomable" 
-                 style="cursor: zoom-in; height: 120px; width: 100%; object-fit: cover;"
-                 loading="lazy">
+            <div class="gallery-item overflow-hidden rounded-3 shadow-sm">
+              <img src="<?= htmlspecialchars($img) ?>" 
+                   class="img-fluid w-100 h-100" 
+                   style="height: 120px; object-fit: cover; cursor: zoom-in; transition: transform 0.3s ease;"
+                   loading="lazy">
+            </div>
           </div>
         <?php endforeach; ?>
       </div>
@@ -202,13 +210,36 @@ $metaDesc = $story['meta_description'] ?: substr(strip_tags($story['content']), 
   <?php endif; ?>
 
   <!-- Author Section -->
-  <section class="bg-white rounded-3 shadow-sm p-4 p-md-5 mb-4">
-    <h2 class="h4 mb-4 pb-2 border-bottom">Submitted By</h2>
+  <section class="bg-white rounded-4 shadow-sm p-4 p-md-5 mb-4 border-0">
+    <h2 class="h4 mb-4 pb-2 border-bottom d-flex align-items-center">
+      <i class="bi bi-person-circle text-orange me-2"></i>
+      Submitted By
+    </h2>
     <div class="row">
       <div class="col-md-8">
-        <p><strong class="text-dark">Name:</strong> <?= htmlspecialchars($story['user_name']) ?></p>
-        <p><strong class="text-dark">Contact:</strong> <?= htmlspecialchars($story['user_contact']) ?></p>
-        <p><strong class="text-dark">Address:</strong> <?= nl2br(htmlspecialchars($story['user_address'])) ?></p>
+        <div class="d-flex flex-column gap-3">
+          <div class="d-flex align-items-start">
+            <i class="bi bi-person-fill text-muted me-3 mt-1"></i>
+            <div>
+              <h5 class="h6 mb-1 text-muted">Name</h5>
+              <p class="mb-0"><?= htmlspecialchars($story['user_name']) ?></p>
+            </div>
+          </div>
+          <div class="d-flex align-items-start">
+            <i class="bi bi-telephone-fill text-muted me-3 mt-1"></i>
+            <div>
+              <h5 class="h6 mb-1 text-muted">Contact</h5>
+              <p class="mb-0"><?= htmlspecialchars($story['user_contact']) ?></p>
+            </div>
+          </div>
+          <div class="d-flex align-items-start">
+            <i class="bi bi-geo-alt-fill text-muted me-3 mt-1"></i>
+            <div>
+              <h5 class="h6 mb-1 text-muted">Address</h5>
+              <p class="mb-0"><?= nl2br(htmlspecialchars($story['user_address'])) ?></p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -217,7 +248,7 @@ $metaDesc = $story['meta_description'] ?: substr(strip_tags($story['content']), 
   <?php
   $services = $pdo->query("SELECT * FROM services ORDER BY id DESC")->fetchAll();
   if (!empty($services)): ?>
-    <section class="mb-4">
+    <section class="my-4">
       <h2 class="h4 mb-4 pb-2 border-bottom">Related Services</h2>
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
         <?php foreach ($services as $service): ?>
@@ -241,6 +272,8 @@ $metaDesc = $story['meta_description'] ?: substr(strip_tags($story['content']), 
     </section>
   <?php endif; ?>
 </main>
+
+
 
 <?php include 'includes/footer.php'; ?>
 
