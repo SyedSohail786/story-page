@@ -142,19 +142,21 @@ $metaDesc = "Browse all upcoming events in your area. Find events happening toda
   </div>
 </nav>
 
-<main class="container my-5">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0 text-orange">
+<main class="container h-100 p-3">
+  <!-- Header with Filter - Improved for mobile -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 mb-md-4 gap-3">
+    <h2 class="mb-0 text-orange fs-4 fs-md-3">
       <i class="bi bi-calendar-event me-2"></i> Upcoming Events
     </h2>
     
-    <!-- Date Filter Dropdown -->
-    <form class="mb-4">
-      <div class="input-group">
+    <!-- Date Filter - Made more compact -->
+    <form class="mb-0 w-30 w-md-auto">
+      <div class="input-group input-group-sm input-group-md">
         <label class="input-group-text" for="dateFilter">
-          <i class="bi bi-filter me-1"></i> Filter
+          <i class="bi bi-filter me-1"></i> 
+          <span class="d-none d-sm-inline">Filter</span>
         </label>
-        <select name="when" id="dateFilter" onchange="this.form.submit()" class="form-select">
+        <select name="when" id="dateFilter" onchange="this.form.submit()" class="form-select form-select-sm form-select-md">
           <option value="">All Events</option>
           <option value="today" <?= $dateFilter==='today'?'selected':'' ?>>Today</option>
           <option value="this_week" <?= $dateFilter==='this_week'?'selected':'' ?>>This Week</option>
@@ -163,29 +165,33 @@ $metaDesc = "Browse all upcoming events in your area. Find events happening toda
     </form>
   </div>
 
-  <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+  <!-- Events Grid - Optimized for mobile -->
+  <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-2">
     <?php if (!empty($events)): ?>
       <?php foreach ($events as $event): ?>
         <div class="col">
-          <div class="card h-100 shadow-sm border-0 story-card">
-            <img src="<?= htmlspecialchars($event['image']) ?>" class="card-img-top" style="height: 200px; object-fit: cover;" alt="<?= htmlspecialchars($event['name']) ?>">
-            <div class="card-body">
-              <h5 class="card-title"><?= htmlspecialchars($event['name']) ?></h5>
-              <p class="card-text text-muted small">
+          <div class="card h-100 shadow-sm border-0 story-card border ">
+            <img src="<?= htmlspecialchars($event['image']) ?>" class="card-img-top" style="height: 160px; object-fit: cover;" alt="<?= htmlspecialchars($event['name']) ?>">
+            <div class="card-body p-3">
+              <h5 class="card-title fs-6 mb-1"><?= htmlspecialchars($event['name']) ?></h5>
+              <p class="card-text text-muted small mb-2">
                 <i class="bi bi-calendar-event me-1"></i>
-                <?= date('F j, Y, g:i A', strtotime($event['event_datetime'])) ?>
+                <?= date('M j, g:i A', strtotime($event['event_datetime'])) ?>
               </p>
-              <p class="card-text text-truncate-3"><?= htmlspecialchars(substr(strip_tags($event['description']), 0, 100)) ?> ...</p> 
+              <p class="card-text text-muted small text-truncate-3 mb-2"><?= htmlspecialchars(substr(strip_tags($event['description']), 0, 80)) ?>...</p> 
             </div> 
-            <div class="card-footer bg-transparent border-0 pt-0">
-              <a href="event/<?= urlencode($event['slug']) ?>" class="btn btn-sm btn-orange w-100">View Details</a>
+            <div class="card-footer bg-transparent border-0 pt-0 px-3 pb-3">
+              <a href="event/<?= urlencode($event['slug']) ?>" class="btn btn-sm btn-orange w-100 py-2">View Details</a>
             </div>
           </div>
         </div>
       <?php endforeach; ?>
     <?php else: ?>
       <div class="col-12">
-        <div class="alert alert-warning text-center">No events found. <?= $dateFilter ? 'Try removing the date filter.' : '' ?></div>
+        <div class="alert alert-warning text-center py-3">
+          <i class="bi bi-calendar-x me-2"></i>
+          No events found. <?= $dateFilter ? 'Try removing the date filter.' : '' ?>
+        </div>
       </div>
     <?php endif; ?>
   </div>
