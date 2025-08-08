@@ -133,9 +133,9 @@ $metaDesc  = htmlspecialchars($event['meta_description'] ?: substr(strip_tags($e
 
 <main class="container my-5">
   <!-- Back button with icon -->
-  <!-- <a href="events.php" class="btn btn-outline-secondary mb-4 d-inline-flex align-items-center">
+  <a href="events.php" class="btn btn-outline-secondary mb-4 d-inline-flex align-items-center">
     <i class="bi bi-arrow-left me-2"></i> Back to Events
-  </a> -->
+  </a>
   
   <!-- Event Header -->
   <div class="d-flex flex-column flex-md-row gap-4 mb-5">
