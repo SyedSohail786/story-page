@@ -131,21 +131,44 @@ $metaDesc  = htmlspecialchars($event['meta_description'] ?: substr(strip_tags($e
   </div>
 </nav>
 
-  <main class="container my-5">
-    <a href="events.php" class="btn btn-outline-secondary mb-4">
-      <i class="bi bi-arrow-left"></i> Back to Events
-    </a>
-    <h1 class="display-5"><?= htmlspecialchars($event['name']) ?></h1>
-    <p class="text-muted">
-      <strong>Date:</strong> <?= date('F j, Y, g:i A', strtotime($event['event_datetime'])) ?><br>
-      <strong>Location:</strong> <?= htmlspecialchars($event['location']) ?>
-    </p>
+<main class="container my-5">
+  <!-- Back button with icon -->
+  <!-- <a href="events.php" class="btn btn-outline-secondary mb-4 d-inline-flex align-items-center">
+    <i class="bi bi-arrow-left me-2"></i> Back to Events
+  </a> -->
+  
+  <!-- Event Header -->
+  <div class="d-flex flex-column flex-md-row gap-4 mb-5">
     <?php if ($event['image']): ?>
-      <img src="<?= $event['image'] ?>" alt="<?= htmlspecialchars($event['name']) ?>" class="img-fluid mb-4 rounded">
+      <div class="flex-shrink-0" style="max-width: 400px;">
+        <img src="<?= $event['image'] ?>" 
+             alt="<?= htmlspecialchars($event['name']) ?>" 
+             class="img-fluid rounded-3 shadow w-100"
+             style="max-height: 300px; object-fit: cover;">
+      </div>
     <?php endif; ?>
-    <div class="bg-white p-4 rounded shadow-sm"><?= nl2br(htmlspecialchars($event['description'])) ?></div>
+    <div class="flex-grow-1">
+      <h1 class="display-5 fw-bold mb-3"><?= htmlspecialchars($event['name']) ?></h1>
+      <div class="d-flex flex-column gap-2 mb-4">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-calendar-event text-orange me-2"></i>
+          <span><?= date('F j, Y, g:i A', strtotime($event['event_datetime'])) ?></span>
+        </div>
+        <div class="d-flex align-items-center">
+          <i class="bi bi-geo-alt text-orange me-2"></i>
+          <span><?= htmlspecialchars($event['location']) ?></span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-     <?php
+  <!-- Event Description -->
+  <div class="bg-white p-4 p-md-5 rounded-3 shadow-sm mb-5">
+    <?= nl2br(htmlspecialchars($event['description'])) ?>
+  </div>
+
+  <!-- Services Section - Mobile Optimized -->
+    <?php
   $services = $pdo->query("SELECT * FROM services ORDER BY id DESC")->fetchAll();
   if (!empty($services)): ?>
     <section class="my-4">
@@ -171,7 +194,7 @@ $metaDesc  = htmlspecialchars($event['meta_description'] ?: substr(strip_tags($e
       </div>
     </section>
   <?php endif; ?>
-  </main>
+</main>
 
   <?php include 'includes/footer.php'; ?>
   <script src="assets/js/bootstrap.bundle.min.js"></script>
