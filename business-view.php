@@ -95,33 +95,32 @@ $services = $pdo->query("SELECT * FROM services ORDER BY id DESC")->fetchAll();
     </div>
 
     <!-- Services Section - Mobile Optimized -->
-    <?php if (!empty($services)): ?>
-      <section class="mb-5">
-        <h2 class="h4 mb-4 pb-2 border-bottom d-flex align-items-center">
-          <i class="bi bi-stars me-2 text-orange"></i>
-          Related Services
-        </h2>
-        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
-          <?php foreach ($services as $service): ?>
-            <div class="col">
-              <div class="card h-100 border-0 shadow-sm service-card">
-                <?php if (!empty($service['image'])): ?>
-                  <img src="<?= htmlspecialchars($service['image']) ?>" 
-                       class="card-img-top service-img" 
-                       alt="<?= htmlspecialchars($service['name']) ?>"
-                       loading="lazy">
-                <?php endif; ?>
-                <div class="card-body p-3 d-flex flex-column">
-                  <h5 class="card-title fs-6 mb-2"><?= htmlspecialchars($service['name']) ?></h5>
-                  <p class="card-text small text-muted mb-3 flex-grow-1"><?= htmlspecialchars($service['short_description']) ?></p>
-                  <a href="contact.php" class="btn btn-sm btn-primary mt-auto">Get Service</a>
-                </div>
+    <?php
+  $services = $pdo->query("SELECT * FROM services ORDER BY id DESC")->fetchAll();
+  if (!empty($services)): ?>
+    <section class="my-4">
+      <h2 class="h4 mb-4 pb-2 border-bottom">Related Services</h2>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+        <?php foreach ($services as $service): ?>
+          <div class="col">
+            <div class="card h-100 shadow-sm border-0">
+              <?php if (!empty($service['image'])): ?>
+                <img src="<?= htmlspecialchars($service['image']) ?>" 
+                     class="card-img-top" 
+                     style="height: 180px; object-fit: cover;"
+                     loading="lazy">
+              <?php endif; ?>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title"><?= htmlspecialchars($service['name']) ?></h5>
+                <p class="card-text small text-muted"><?= htmlspecialchars($service['short_description']) ?></p>
+                <a href="contact.php" class="btn btn-sm btn-primary mt-auto">Get Service</a>
               </div>
             </div>
-          <?php endforeach; ?>
-        </div>
-      </section>
-    <?php endif; ?>
+          </div>
+        <?php endforeach; ?>
+      </div>
+    </section>
+  <?php endif; ?>
   </main>
 
   <?php include 'includes/footer.php'; ?>
