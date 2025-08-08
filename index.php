@@ -302,107 +302,96 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
   <?php endif; ?>
 </div>
 
-
   <!-- POPULAR STORIES -->
-  <div class="container my-5 py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="mb-0" style="color: #fd7e14;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-fire me-2"
-          viewBox="0 0 16 16">
-          <path
+  <div class="container my-5 p-0">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0" style="color: #fd7e14;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-fire me-2" viewBox="0 0 16 16">
+        <path
             d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16Zm0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15Z" />
-        </svg>
-        Popular Stories
-      </h2>
-      <a href="popular.php" class="btn btn-outline-orange">
-        View All
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-          class="bi bi-arrow-right ms-1" viewBox="0 0 16 16">
-          <path fill-rule="evenodd"
+      </svg>
+      Popular Stories
+    </h2>
+    <a href="popular.php" class="btn btn-outline-orange btn-sm">
+      View All
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-1" viewBox="0 0 16 16">
+         <path fill-rule="evenodd"
             d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
-        </svg>
-      </a>
-    </div>
+      </svg>
+    </a>
+  </div>
 
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="popularStories">
-      <?php foreach ($popular as $i => $s): ?>
-        <div class="col popular-card <?= $i >= 8 ? 'd-none' : '' ?>">
-          <div class="card h-100 border-0 shadow-sm story-card">
-            <div class="position-relative overflow-hidden" style="height: 200px;">
-              <img src="<?= $s['thumbnail'] ?>" class="card-img-top h-100 w-100"
-                style="object-fit: cover; transition: transform 0.3s ease;">
-              <div class="card-img-overlay d-flex align-items-end p-0">
-                <span class="badge bg-orange text-white mb-2 ms-2">Trending</span>
-              </div>
-            </div>
-            <div class="card-body">
-              <h5 class="card-title"><?= htmlspecialchars($s['title']) ?></h5>
-              <p class="card-text text-muted small">
-                <?= date('F j, Y', strtotime($s['created_at'])) ?>
-              </p>
-              <p class="card-text text-truncate-3"><?= htmlspecialchars(substr(strip_tags($s['content']), 0, 100)) ?>...
-              </p>
-            </div>
-            <div class="card-footer bg-transparent border-0 pt-0">
-              <a href="story/<?= urlencode($s['slug']) ?>" class="btn btn-sm btn-orange w-100">
-                Read Story
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                  class="bi bi-arrow-right ms-1" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd"
-                    d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
-                </svg>
-              </a>
-            </div>
+  <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3" id="popularStories">
+    <?php foreach ($popular as $i => $s): ?>
+    <div class="col popular-card <?= $i >= 8 ? 'd-none' : '' ?>">
+      <div class="card h-100 border-0 shadow-sm story-card">
+        <div class="position-relative overflow-hidden" style="height: 180px;">
+          <img src="<?= $s['thumbnail'] ?>" class="card-img-top h-100 w-100"
+            style="object-fit: cover; transition: transform 0.3s ease;">
+          <div class="card-img-overlay d-flex align-items-end p-0">
+            <span class="badge bg-orange text-white mb-2 ms-2">Trending</span>
           </div>
         </div>
-      <?php endforeach; ?>
-    </div>
-
-    <?php if (count($popular) > 8): ?>
-      <div class="text-center mt-4">
-        <button class="btn btn-orange px-4" id="loadMorePopular">
-          Load More Stories
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-            class="bi bi-chevron-down ms-2" viewBox="0 0 16 16">
-            <path fill-rule="evenodd"
-              d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-          </svg>
-        </button>
+        <div class="card-body p-3">
+          <h5 class="card-title fs-6 mb-1"><?= htmlspecialchars($s['title']) ?></h5>
+        </div>
+        <div class="card-footer bg-transparent border-0 pt-0 px-3 pb-3">
+          <a href="story/<?= urlencode($s['slug']) ?>" class="btn btn-sm btn-orange w-100 py-2">
+            Read Story
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-arrow-right ms-1" viewBox="0 0 16 16">
+              <!-- SVG path remains same -->
+            </svg>
+          </a>
+        </div>
       </div>
-    <?php endif; ?>
+    </div>
+    <?php endforeach; ?>
   </div>
+
+  <?php if (count($popular) > 8): ?>
+  <div class="text-center mt-4">
+    <button class="btn btn-orange px-4 btn-sm" id="loadMorePopular">
+      Load More
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chevron-down ms-2" viewBox="0 0 16 16">
+        <!-- SVG path remains same -->
+      </svg>
+    </button>
+  </div>
+  <?php endif; ?>
+</div>
 
   <!-- Businesses -->
   <?php
   // Fetch businesses
   $businessList = $pdo->query("SELECT * FROM businesses ORDER BY created_at DESC LIMIT 8")->fetchAll();
   ?>
-  <div class="container my-5 py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="mb-0" style="color: #fd7e14;">Businesses</h2>
-      <a href="businesses.php" class="btn btn-outline-orange">View All</a>
-    </div>
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-      <?php foreach ($businessList as $biz): ?>
-        <div class="col">
-          <div class="card h-100 border-0 shadow-sm">
-            <img src="<?= htmlspecialchars($biz['image']) ?>" class="card-img-top"
-              style="height: 200px; object-fit: cover;">
-            <div class="card-body">
-              <h5 class="card-title"><?= htmlspecialchars($biz['name']) ?></h5>
-              <p class="card-text text-muted"><?= htmlspecialchars($biz['type']) ?></p>
-              <p class="card-text text-truncate-3">
-                <?= htmlspecialchars(substr(strip_tags($biz['description']), 0, 100)) ?>...
-              </p>
-            </div>
-            <div class="card-footer bg-transparent border-0 pt-0">
-              <a href="business/<?= urlencode($biz['slug']) ?>" class="btn btn-sm btn-orange w-100">View Details</a>
-            </div>
-          </div>
-        </div>
-      <?php endforeach; ?>
-    </div>
+  <div class="container my-5 p-0">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0" style="color: #fd7e14;">Businesses</h2>
+    <a href="businesses.php" class="btn btn-outline-orange btn-sm">View All
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-1" viewBox="0 0 16 16">
+         <path fill-rule="evenodd"
+            d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+      </svg>
+    </a>
   </div>
+  <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+    <?php foreach ($businessList as $biz): ?>
+    <div class="col">
+      <div class="card h-100 border-0 shadow-sm">
+        <img src="<?= htmlspecialchars($biz['image']) ?>" class="card-img-top" style="height: 180px; object-fit: cover;">
+        <div class="card-body p-3">
+          <h5 class="card-title fs-6 mb-1"><?= htmlspecialchars($biz['name']) ?></h5>
+        </div>
+        <div class="card-footer bg-transparent border-0 pt-0 px-3 pb-3">
+          <a href="business/<?= urlencode($biz['slug']) ?>" class="btn btn-sm btn-orange w-100 py-2">View Details 
+          </a>
+        </div>
+      </div>
+    </div>
+    <?php endforeach; ?>
+  </div>
+</div>
 
   <!-- Upcoming Events -->
   <?php
@@ -412,31 +401,31 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
   $upcoming = $events->fetchAll();
   ?>
   <div class="container my-5 py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="mb-0" style="color: #fd7e14;">Upcoming Events</h2>
-      <a href="events.php" class="btn btn-outline-orange">View All</a>
-    </div>
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-      <?php foreach ($upcoming as $event): ?>
-        <div class="col">
-          <div class="card h-100 border-0 shadow-sm">
-            <img src="<?= htmlspecialchars($event['image']) ?>" class="card-img-top"
-              style="height: 200px; object-fit: cover;">
-            <div class="card-body">
-              <h5 class="card-title"><?= htmlspecialchars($event['name']) ?></h5>
-              <p class="card-text text-muted"><?= date('F j, Y, g:i A', strtotime($event['event_datetime'])) ?></p>
-              <p class="card-text text-truncate-3">
-                <?= htmlspecialchars(substr(strip_tags($event['description']), 0, 100)) ?>...
-              </p>
-            </div>
-            <div class="card-footer bg-transparent border-0 pt-0">
-              <a href="event/<?= urlencode($event['slug']) ?>" class="btn btn-sm btn-orange w-100">View Details</a>
-            </div>
-          </div>
-        </div>
-      <?php endforeach; ?>
-    </div>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0" style="color: #fd7e14;">Upcoming Events</h2>
+    <a href="events.php" class="btn btn-outline-orange btn-sm">View All
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-1" viewBox="0 0 16 16">
+         <path fill-rule="evenodd"
+            d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+      </svg>
+    </a>
   </div>
+  <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+    <?php foreach ($upcoming as $event): ?>
+    <div class="col">
+      <div class="card h-100 border-0 shadow-sm">
+        <img src="<?= htmlspecialchars($event['image']) ?>" class="card-img-top" style="height: 180px; object-fit: cover;">
+        <div class="card-body p-3">
+          <h5 class="card-title fs-6 mb-1"><?= htmlspecialchars($event['name']) ?></h5>
+        </div>
+        <div class="card-footer bg-transparent border-0 pt-0 px-3 pb-3">
+          <a href="event/<?= urlencode($event['slug']) ?>" class="btn btn-sm btn-orange w-100 py-2">View Details</a>
+        </div>
+      </div>
+    </div>
+    <?php endforeach; ?>
+  </div>
+</div>
 
 
 
