@@ -584,6 +584,18 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
     opacity: 0;
   }
 
+  .carousel-indicators button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin: 0 5px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .carousel-indicators button.active {
+    background-color: #fd7e14;
+  }
 
   @media (max-width: 992px) {
     .nav-link {
