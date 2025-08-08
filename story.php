@@ -198,7 +198,7 @@ $metaDesc = $story['meta_description'] ?: substr(strip_tags($story['content']), 
           </div>
         <?php endforeach; ?>
       </div>
-    </section>
+    </section> 
   <?php endif; ?>
 
   <!-- Author Section -->
