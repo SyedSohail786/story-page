@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <!-- Modern Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background: linear-gradient(135deg, #fd7e14 0%, #ff4500 100%); box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+<nav class="navbar navbar-expand-lg my-0 navbar-dark sticky-top" style="background: linear-gradient(135deg, #fd7e14 0%, #ff4500 100%); box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
   <div class="container">
     <a class="navbar-brand fw-bold d-flex align-items-center" href="index.php">
       <span class="logo-icon me-2" style="width: 30px; height: 30px; background-color: white; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
@@ -137,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!-- Main Content Area -->
 <div class="container-fluid d-flex flex-column flex-grow-1 bg-light">
-  <div class="container my-5 py-4 flex-grow-1">
+  <div class="container py-4 flex-grow-1">
     <div class="row justify-content-center">
       <div class="col-lg-8">
         <div class="card shadow-sm border-0 overflow-hidden">
