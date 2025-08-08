@@ -138,10 +138,10 @@ include 'includes/header.php';
   </div>
 </nav>
 
-<main class="container my-5">
+<main class="container my-2">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="mb-0 text-orange">
-      <i class="bi bi-shop me-2"></i> Business Directory
+      <i class="bi bi-shop me-2"></i>Businesses
     </h2>
     
     <!-- Business Type Filter Dropdown -->
@@ -166,7 +166,7 @@ include 'includes/header.php';
     </div>
   </div>
 
-  <div class="row row-cols-1 row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+  <div class="row row-cols-1 row-cols-2 row-cols-md-3 row-cols-lg-4 g-2">
     <?php if ($businesses->rowCount() > 0): ?>
       <?php foreach ($businesses as $biz): ?>
         <div class="col">
