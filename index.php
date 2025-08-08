@@ -18,7 +18,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
       <img src="assets/images/ad-left.jpg" class="img-fluid rounded">
     </div>
     <div class="col-md-8">
-      <img src="assets/images/logo.png" class="img-fluid" style="max-height: 80px;">
+      <img src="assets/images/logo.png" class="img-fluid" style="max-height: 80px;" alt="StoryPortal Logo">
     </div>
     <div class="col-md-2 d-none d-md-block">
       <img src="assets/images/ad-right.jpg" class="img-fluid rounded">
@@ -166,48 +166,59 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
   </div>
 
   <!-- Hero Slider -->
-  <div class="container my-4">
-    <div id="mainSlider" class="carousel slide carousel-fade shadow-lg rounded-4 overflow-hidden"
-      data-bs-ride="carousel">
+  <div class="container my-3 my-md-5 px-0">
+    <div id="mainSlider" class="carousel slide carousel-fade shadow-xxl rounded-4 overflow-hidden" data-bs-ride="carousel">
       <div class="carousel-indicators">
         <?php foreach ($slides as $i => $s): ?>
-          <button type="button" data-bs-target="#mainSlider" data-bs-slide-to="<?= $i ?>" <?= $i === 0 ? 'class="active"' : '' ?>></button>
+          <button type="button" data-bs-target="#mainSlider" data-bs-slide-to="<?= $i ?>" 
+            class="<?= $i === 0 ? 'active' : '' ?> rounded-pill" style="width: 8px; height: 8px; margin: 0 4px;"></button>
         <?php endforeach; ?>
       </div>
       <div class="carousel-inner rounded-4">
         <?php foreach ($slides as $i => $s): ?>
           <div class="carousel-item <?= $i === 0 ? 'active' : '' ?> position-relative">
-            <img src="<?= $s['thumbnail'] ?>" class="d-block w-100 position-relative"
-              style="height: 500px; object-fit: cover; object-position: center;">
-            <div class="carousel-caption d-flex flex-column justify-content-center h-100 text-start p-4">
-              <div class="container py-2 px-5 rounded-2 position-absolute bottom-0"
-                style="background: rgba(0, 0, 0, 0.2);">
-                <h2 class="display-5 fw-bold mb-3"><?= htmlspecialchars($s['title']) ?></h2>
-                <p class="d-none d-md-block mb-4"><?= htmlspecialchars(substr(strip_tags($s['content']), 0, 150)) ?>...
-                </p>
-                <a href="story/<?= urlencode($s['slug']) ?>" class="btn btn-orange btn-lg px-4 align-self-start">
-                  Read Story
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                    class="bi bi-arrow-right ms-2" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                      d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
-                  </svg>
-                </a>
+            <!-- Image with overlay gradient -->
+            <div class="position-relative">
+              <img src="<?= $s['thumbnail'] ?>" class="d-block w-100" 
+                   style="height: 350px; object-fit: cover; object-position: center;">
+              <div class="position-absolute top-0 start-0 w-100 h-100" 
+                   style="background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);"></div>
+            </div>
+            
+            <!-- Caption with beautiful styling -->
+            <div class="carousel-caption d-flex flex-column justify-content-end h-100 text-start p-4">
+              <div class="container px-3 px-md-5 pb-4">
+                <div class="animate__animated animate__fadeInUp">
+                  <h2 class="fs-3 fs-md-2 fw-bold mb-2 text-white"><?= htmlspecialchars($s['title']) ?></h2>
+                  <p class="d-none d-sm-block mb-3 text-light opacity-75" style="text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
+                    <?= htmlspecialchars(substr(strip_tags($s['content']), 0, 120)) ?>...
+                  </p>
+                  <a href="story/<?= urlencode($s['slug']) ?>" 
+                     class="btn btn-orange btn-sm btn-md px-4 py-2 rounded-pill d-inline-flex align-items-center shadow-sm">
+                    Read Story
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                      class="bi bi-arrow-right ms-2" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd"
+                        d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+                    </svg>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         <?php endforeach; ?>
       </div>
+      <!-- Custom arrow buttons -->
       <button class="carousel-control-prev" type="button" data-bs-target="#mainSlider" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon bg-black rounded" aria-hidden="true"></span>
+        <span class="carousel-control-prev-icon bg-dark bg-opacity-50 rounded-circle p-3" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
       </button>
       <button class="carousel-control-next" type="button" data-bs-target="#mainSlider" data-bs-slide="next">
-        <span class="carousel-control-next-icon bg-black rounded" aria-hidden="true"></span>
+        <span class="carousel-control-next-icon bg-dark bg-opacity-50 rounded-circle p-3" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
       </button>
     </div>
-  </div>
+</div>
 
   <div class="container my-5 py-4">
     <h2 class="mb-4 text-orange text-center">Browse by Category</h2>
@@ -509,20 +520,6 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
     background-color: #fd7e14 !important;
   }
 
-  .btn-orange {
-    background-color: #fd7e14;
-    color: white;
-    transition: all 0.3s ease;
-    border: none;
-  }
-
-  .btn-orange:hover {
-    background-color: #e67300;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(253, 126, 20, 0.3);
-  }
-
   .btn-outline-orange {
     border-color: #fd7e14;
     color: #fd7e14;
@@ -587,18 +584,6 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
     opacity: 0;
   }
 
-  .carousel-indicators button {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    margin: 0 5px;
-    border: none;
-    background-color: rgba(255, 255, 255, 0.5);
-  }
-
-  .carousel-indicators button.active {
-    background-color: #fd7e14;
-  }
 
   @media (max-width: 992px) {
     .nav-link {
@@ -635,6 +620,24 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
     border: 1px solid #ddd;
     border-top: none;
     border-radius: 0 0 6px 6px;
+  }
+
+  .btn-orange {
+    background-color: #fd7e14;
+    color: white;
+    transition: all 0.3s ease;
+  }
+  .btn-orange:hover {
+    background-color: #ff922b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  .carousel-indicators button {
+    transition: all 0.3s ease;
+  }
+  .carousel-indicators button.active {
+    width: 24px !important;
+    background-color: #fd7e14 !important;
   }
 </style>
 
