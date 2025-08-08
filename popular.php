@@ -148,7 +148,7 @@ $metaDesc = "Browse the most popular and trending stories shared by our communit
 <main class="container my-5">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="mb-0 text-orange">
-      <i class="bi bi-fire me-2"></i> Popular Stories
+       Popular Stories
     </h2>
     
     <!-- Category Filter Dropdown -->
@@ -173,7 +173,7 @@ $metaDesc = "Browse the most popular and trending stories shared by our communit
           </div>
   </div>
 
-  <div class="row row-cols-1 row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+  <div class="row row-cols-1 row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
     <?php if (!empty($popularStories)): ?>
       <?php foreach ($popularStories as $story): ?>
         <div class="col">
@@ -183,8 +183,8 @@ $metaDesc = "Browse the most popular and trending stories shared by our communit
             <?php endif; ?>
             <div class="card-body">
               <h5 class="card-title"><?= htmlspecialchars($story['title']) ?></h5>
-              <p class="card-text text-muted small"><?= date('F j, Y', strtotime($story['created_at'])) ?></p>
-              <p class="card-text text-truncate"><?= htmlspecialchars(substr(strip_tags($story['content']), 0, 100)) ?>...</p>
+              <!-- <p class="card-text text-muted small"><?= date('F j, Y', strtotime($story['created_at'])) ?></p> -->
+              <!-- <p class="card-text text-truncate"><?= htmlspecialchars(substr(strip_tags($story['content']), 0, 100)) ?>...</p> -->
             </div>
             <div class="card-footer bg-transparent border-0">
               <a href="story/<?= htmlspecialchars($story['slug']) ?>" class="btn btn-sm btn-orange w-100">Read More</a>
