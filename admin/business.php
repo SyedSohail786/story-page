@@ -114,7 +114,7 @@ $businesses = $pdo->query("SELECT * FROM businesses ORDER BY created_at DESC")->
       <div class="col-md-6"><label>Address</label><input name="address" class="form-control" value="<?= htmlspecialchars($biz['address'] ?? '') ?>"></div>
       <div class="col-md-6"><label>Phone</label><input name="phone" class="form-control" value="<?= htmlspecialchars($biz['phone'] ?? '') ?>"></div>
       <div class="col-md-6"><label>Email</label><input type="email" name="email" class="form-control" value="<?= htmlspecialchars($biz['email'] ?? '') ?>"></div>
-      <div class="col-md-6"><label>Website</label><input type="url" name="website" class="form-control" value="<?= htmlspecialchars($biz['website'] ?? '') ?>"></div>
+      <div class="col-md-6"><label>Website</label><input type="text" name="website" class="form-control" value="<?= htmlspecialchars($biz['website'] ?? '') ?>"></div>
 
       <div class="col-md-6">
         <label>Image (≤500KB)</label>
