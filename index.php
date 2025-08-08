@@ -220,16 +220,18 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
     </div>
 </div>
 
+<!-- Browse by Category -->
   <div class="container my-5 py-4">
     <h2 class="mb-4 text-orange text-center">Browse by Category</h2>
-    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-4">
+    <div class="row row-cols-3 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-2">
       <?php foreach ($categories as $cat): ?>
         <div class="col">
           <a href="<?= urlencode($cat['slug']) ?>" class="text-decoration-none d-block">
-            <div class="position-relative overflow-hidden rounded shadow-sm category-tile" style="height: 150px;">
+            <div class="position-relative overflow-hidden rounded shadow-sm category-tile" style="height: 100px;">
               <img src="uploads/icons/<?= htmlspecialchars($cat['icon']) ?>" class="w-100 h-100 object-fit-cover"
-                style="filter: brightness(70%);">
-              <div class="position-absolute top-50 start-50 translate-middle text-white fw-semibold text-center px-2">
+                style="filter: brightness(70%); transition: transform 0.3s ease;">
+              <div class="position-absolute top-50 start-50 translate-middle text-white fw-semibold text-center px-2 w-100" 
+                   style="text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">
                 <?= htmlspecialchars($cat['name']) ?>
               </div>
             </div>
@@ -237,8 +239,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
         </div>
       <?php endforeach; ?>
     </div>
-  </div>
-
+</div>
 
   <!-- LATEST STORIES -->
   <div class="container my-5 py-4">
@@ -479,6 +480,18 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
   }
 
+  .category-tile:hover img {
+    transform: scale(1.05);
+    filter: brightness(80%);
+  }
+  
+  .category-tile {
+    transition: all 0.3s ease;
+  }
+  
+  .category-tile:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
+  }
 
   .navbar.scrolled {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
