@@ -163,9 +163,9 @@ $services = $pdo->query("SELECT * FROM services ORDER BY id DESC")->fetchAll();
   
   <main class="container my-4 my-lg-5">
     <!-- Back button -->
-    <a href="businesses.php" class="btn btn-outline-secondary mb-4 d-inline-flex align-items-center">
+    <!-- <a href="businesses.php" class="btn btn-outline-secondary mb-4 d-inline-flex align-items-center">
       <i class="bi bi-arrow-left me-2"></i> Back to Businesses
-    </a>
+    </a> -->
     
     <!-- Business Details -->
     <div class="row g-4 mb-5">
