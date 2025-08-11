@@ -175,6 +175,12 @@ $services = $pdo->query("SELECT * FROM services ORDER BY id DESC")->fetchAll();
                alt="<?= htmlspecialchars($biz['name']) ?>" 
                class="img-fluid rounded-3 shadow mb-3 w-100">
         <?php endif; ?>
+        <div class="col-lg-8 mb-3">
+          <h1 class="display-5 fw-bold mb-3"><?= htmlspecialchars($biz['name']) ?></h1>
+          <div class="bg-white p-4 rounded-3 shadow-sm">
+            <?= nl2br(htmlspecialchars($biz['description'])) ?>
+          </div>
+        </div>
         <div class="bg-white p-4 rounded-3 shadow-sm">
           <h2 class="h4">Business Details</h2>
           <ul class="list-unstyled">
@@ -189,15 +195,9 @@ $services = $pdo->query("SELECT * FROM services ORDER BY id DESC")->fetchAll();
               <li class="mb-2"><strong>Email:</strong> <?= htmlspecialchars($biz['email']) ?></li>
             <?php endif; ?>
             <?php if ($biz['website']): ?>
-              <li class="mb-2"><strong>Website:</strong> <a href="<?= htmlspecialchars($biz['website']) ?>" target="_blank">Visit Site</a></li>
+              <li class="mb-2"><strong>Website:</strong> <a href="<?= htmlspecialchars(string: $biz['website']) ?>" target="_blank">Visit Site</a></li>
             <?php endif; ?>
           </ul>
-        </div>
-      </div>
-      <div class="col-lg-8">
-        <h1 class="display-5 fw-bold mb-3"><?= htmlspecialchars($biz['name']) ?></h1>
-        <div class="bg-white p-4 rounded-3 shadow-sm">
-          <?= nl2br(htmlspecialchars($biz['description'])) ?>
         </div>
       </div>
     </div>
