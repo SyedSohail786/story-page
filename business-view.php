@@ -174,25 +174,22 @@ $services = $pdo->query("SELECT * FROM services ORDER BY id DESC")->fetchAll();
 </nav>
   
   <main class="container my-4 my-lg-5">
-    <!-- Back button -->
-    <!-- <a href="businesses.php" class="btn btn-outline-secondary mb-4 d-inline-flex align-items-center">
-      <i class="bi bi-arrow-left me-2"></i> Back to Businesses
-    </a> -->
-    
-    <!-- Business Details -->
     <div class="row g-4 mb-5">
-      <div class="col-lg-4">
+      <!-- Mobile Layout - Image, Name, Description, then Business Details -->
+      <div class="col-12 d-lg-none">
         <?php if ($biz['image']): ?>
           <img src="<?= $biz['image'] ?>" 
                alt="<?= htmlspecialchars($biz['name']) ?>" 
                class="img-fluid rounded-3 shadow mb-3 w-100">
         <?php endif; ?>
-        <div class="col-lg-8 mb-3">
-          <h1 class="display-5 fw-bold mb-3"><?= htmlspecialchars($biz['name']) ?></h1>
-          <div class="bg-white p-4 rounded-3 shadow-sm">
-            <?= nl2br(htmlspecialchars($biz['description'])) ?>
-          </div>
+        
+        <h1 class="display-5 fw-bold mb-3"><?= htmlspecialchars($biz['name']) ?></h1>
+        
+        <div class="bg-white p-4 rounded-3 shadow-sm mb-4">
+          <?= nl2br(htmlspecialchars($biz['description'])) ?>
         </div>
+        
+        <!-- Business Details for Mobile -->
         <div class="bg-white p-4 rounded-3 shadow-sm">
           <h2 class="h4">Business Details</h2>
           <ul class="list-unstyled">
@@ -207,40 +204,74 @@ $services = $pdo->query("SELECT * FROM services ORDER BY id DESC")->fetchAll();
               <li class="mb-2"><strong>Email:</strong> <?= htmlspecialchars($biz['email']) ?></li>
             <?php endif; ?>
             <?php if ($biz['website']): ?>
-              <li class="mb-2"><strong>Website:</strong> <a target="_blank" href="<?= htmlspecialchars(string: $biz['website']) ?>" >Visit Site</a></li>
+              <li class="mb-2"><strong>Website:</strong> <a target="_blank" href="<?= htmlspecialchars($biz['website']) ?>">Visit Site</a></li>
             <?php endif; ?>
           </ul>
         </div>
       </div>
+      
+      <!-- Desktop Layout - Unchanged -->
+      <div class="col-lg-4 d-none d-lg-block">
+        <?php if ($biz['image']): ?>
+          <img src="<?= $biz['image'] ?>" 
+               alt="<?= htmlspecialchars($biz['name']) ?>" 
+               class="img-fluid rounded-3 shadow mb-3 w-100">
+        <?php endif; ?>
+        
+        <!-- Business details -->
+        <div class="bg-white p-4 rounded-3 shadow-sm">
+          <h2 class="h4">Business Details</h2>
+          <ul class="list-unstyled">
+            <li class="mb-2"><strong>Type:</strong> <?= htmlspecialchars($biz['type']) ?></li>
+            <?php if ($biz['address']): ?>
+              <li class="mb-2"><strong>Address:</strong> <?= htmlspecialchars($biz['address']) ?></li>
+            <?php endif; ?>
+            <?php if ($biz['phone']): ?>
+              <li class="mb-2"><strong>Phone:</strong> <?= htmlspecialchars($biz['phone']) ?></li>
+            <?php endif; ?>
+            <?php if ($biz['email']): ?>
+              <li class="mb-2"><strong>Email:</strong> <?= htmlspecialchars($biz['email']) ?></li>
+            <?php endif; ?>
+            <?php if ($biz['website']): ?>
+              <li class="mb-2"><strong>Website:</strong> <a target="_blank" href="<?= htmlspecialchars($biz['website']) ?>">Visit Site</a></li>
+            <?php endif; ?>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="col-lg-8 d-none d-lg-block">
+        <h1 class="display-5 fw-bold mb-3"><?= htmlspecialchars($biz['name']) ?></h1>
+        <div class="bg-white p-4 rounded-3 shadow-sm">
+          <?= nl2br(htmlspecialchars($biz['description'])) ?>
+        </div>
+      </div>
     </div>
-
+    
     <!-- Services Section - Mobile Optimized -->
-    <?php
-  $services = $pdo->query("SELECT * FROM services ORDER BY id DESC")->fetchAll();
-  if (!empty($services)): ?>
-    <section class="my-4">
-      <h2 class="h4 mb-4 pb-2 border-bottom">Related Services</h2>
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
-        <?php foreach ($services as $service): ?>
-          <div class="col">
-            <div class="card h-100 shadow-sm border-0">
-              <?php if (!empty($service['image'])): ?>
-                <img src="<?= htmlspecialchars($service['image']) ?>" 
-                     class="card-img-top" 
-                     style="height: 180px; object-fit: cover;"
-                     loading="lazy">
-              <?php endif; ?>
-              <div class="card-body d-flex flex-column">
-                <h5 class="card-title"><?= htmlspecialchars($service['name']) ?></h5>
-                <p class="card-text small text-muted"><?= htmlspecialchars($service['short_description']) ?></p>
-                <a href="contact.php" class="btn btn-sm btn-primary mt-auto">Get Service</a>
+    <?php if (!empty($services)): ?>
+      <section class="my-4">
+        <h2 class="h4 mb-4 pb-2 border-bottom">Related Services</h2>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+          <?php foreach ($services as $service): ?>
+            <div class="col">
+              <div class="card h-100 shadow-sm border-0">
+                <?php if (!empty($service['image'])): ?>
+                  <img src="<?= htmlspecialchars($service['image']) ?>" 
+                       class="card-img-top" 
+                       style="height: 180px; object-fit: cover;"
+                       loading="lazy">
+                <?php endif; ?>
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title"><?= htmlspecialchars($service['name']) ?></h5>
+                  <p class="card-text small text-muted"><?= htmlspecialchars($service['short_description']) ?></p>
+                  <a href="contact.php" class="btn btn-sm btn-primary mt-auto">Get Service</a>
+                </div>
               </div>
             </div>
-          </div>
-        <?php endforeach; ?>
-      </div>
-    </section>
-  <?php endif; ?>
+          <?php endforeach; ?>
+        </div>
+      </section>
+    <?php endif; ?>
   </main>
 
   <?php include 'includes/footer.php'; ?>

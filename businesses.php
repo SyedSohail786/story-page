@@ -140,48 +140,50 @@ include 'includes/header.php';
 
 <main class="container my-2">
 <?php
-// Get type filter from URL
-$type = $_GET['type'] ?? '';
+// Get selected type from POST
+$type = $_POST['type'] ?? '';
 
-// Prepare query with type filter
+// Fetch unique types from DB
+$types = $pdo->query("SELECT DISTINCT type FROM businesses WHERE type IS NOT NULL AND type <> '' ORDER BY type ASC")->fetchAll(PDO::FETCH_COLUMN);
+
+// Fetch businesses based on filter
 if (!empty($type)) {
     $stmt = $pdo->prepare("SELECT * FROM businesses WHERE type = ? ORDER BY views DESC");
     $stmt->execute([$type]);
+    $businessList = $stmt->fetchAll();
 } else {
     $stmt = $pdo->query("SELECT * FROM businesses ORDER BY views DESC");
+    $businessList = $stmt->fetchAll();
 }
 
-// Fetch all businesses (filtered or all)
-$businessList = $stmt->fetchAll();
-
-// Limit to top 4 for display
+// Limit for homepage display
 $businessList = array_slice($businessList, 0, 4);
 ?>
+
 <div class="container my-5 p-0">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="mb-0" style="color: #fd7e14;">
       <?= !empty($type) ? htmlspecialchars($type) . ' Businesses' : 'Top Businesses' ?>
     </h2>
-    <div class="dropdown">
-      <button class="btn btn-outline-orange dropdown-toggle" type="button" id="typeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter me-1" viewBox="0 0 16 16">
-          <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
-        </svg>
-        Filter by Type
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="typeDropdown">
-        <li><a class="dropdown-item <?= !$filterType ? 'active' : '' ?>" href="businesses.php">All Types</a></li>
-        <li><hr class="dropdown-divider"></li>
-        <?php foreach ($types as $type): ?>
-          <li>
-            <a class="dropdown-item <?= ($type === $filterType) ? 'active' : '' ?>" href="businesses.php?type=<?= urlencode($type) ?>">
-              <?= htmlspecialchars($type) ?>
-            </a>
-          </li>
-        <?php endforeach; ?>
-      </ul>
-    </div>
+    <a href="businesses.php" class="btn btn-outline-orange btn-sm">View All
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-1" viewBox="0 0 16 16">
+         <path fill-rule="evenodd"
+            d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+      </svg>
+    </a>
   </div>
+
+  <!-- Dynamic Filter Form -->
+  <form method="POST" class="mb-3">
+    <select name="type" class="form-select w-auto d-inline-block" onchange="this.form.submit()">
+      <option value="">All Types</option>
+      <?php foreach ($types as $t): ?>
+        <option value="<?= htmlspecialchars($t) ?>" <?= ($type == $t ? 'selected' : '') ?>>
+          <?= htmlspecialchars($t) ?>
+        </option>
+      <?php endforeach; ?>
+    </select>
+  </form>
 
   <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
     <?php 
@@ -208,6 +210,8 @@ $businessList = array_slice($businessList, 0, 4);
     <?php endforeach; ?>
   </div>
 </div>
+
+
 
 </main>
 
