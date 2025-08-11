@@ -139,12 +139,29 @@ include 'includes/header.php';
 </nav>
 
 <main class="container my-2">
+<?php
+// Get type filter from URL
+$type = $_GET['type'] ?? '';
+
+// Prepare query with type filter
+if (!empty($type)) {
+    $stmt = $pdo->prepare("SELECT * FROM businesses WHERE type = ? ORDER BY views DESC");
+    $stmt->execute([$type]);
+} else {
+    $stmt = $pdo->query("SELECT * FROM businesses ORDER BY views DESC");
+}
+
+// Fetch all businesses (filtered or all)
+$businessList = $stmt->fetchAll();
+
+// Limit to top 4 for display
+$businessList = array_slice($businessList, 0, 4);
+?>
+<div class="container my-5 p-0">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0 text-orange">
-      <i class="bi bi-shop me-2"></i>Businesses
+    <h2 class="mb-0" style="color: #fd7e14;">
+      <?= !empty($type) ? htmlspecialchars($type) . ' Businesses' : 'Top Businesses' ?>
     </h2>
-    
-    <!-- Business Type Filter Dropdown -->
     <div class="dropdown">
       <button class="btn btn-outline-orange dropdown-toggle" type="button" id="typeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter me-1" viewBox="0 0 16 16">
@@ -166,31 +183,32 @@ include 'includes/header.php';
     </div>
   </div>
 
-  <div class="row row-cols-1 row-cols-2 row-cols-md-3 row-cols-lg-4 g-2">
-    <?php if ($businesses->rowCount() > 0): ?>
-      <?php foreach ($businesses as $biz): ?>
-        <div class="col">
-          <div class="card h-100 shadow-sm border-0">
-            <?php if (!empty($biz['image'])): ?>
-              <img src="<?= htmlspecialchars($biz['image']) ?>" class="card-img-top" style="height: 200px; object-fit: cover;">
-            <?php endif; ?>
-            <div class="card-body">
-              <h5 class="card-title"><?= htmlspecialchars($biz['name']) ?></h5>
-              <p class="card-text text-muted small"><?= htmlspecialchars($biz['type']) ?></p>
-              <p class="card-text text-truncate"><?= htmlspecialchars(substr(strip_tags($biz['description']), 0, 100)) ?>...</p>
-            </div>
-             <div class="card-footer bg-transparent border-0 pt-0">
-              <a href="business/<?= urlencode($biz['slug']) ?>" class="btn btn-sm btn-orange w-100">View Details</a>
-            </div>
-          </div>
+  <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+    <?php 
+    $rank = 1;
+    foreach ($businessList as $biz): 
+    ?>
+    <div class="col">
+      <div class="card h-100 border-0 shadow-sm position-relative">
+        <!-- Rank Badge -->
+        <div class="position-absolute bg-orange text-white px-2 py-1 rounded-end" 
+             style="top:10px; left:0; font-size: 0.8rem; z-index:1;">
+          #<?= $rank++ ?>
         </div>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <div class="col-12">
-        <div class="alert alert-warning text-center">No businesses found.</div>
+
+        <img src="<?= htmlspecialchars($biz['image']) ?>" class="card-img-top" style="height: 180px; object-fit: cover;">
+        <div class="card-body p-3">
+          <h5 class="card-title fs-6 mb-1"><?= htmlspecialchars($biz['name']) ?></h5>
+        </div>
+        <div class="card-footer bg-transparent border-0 pt-0 px-3 pb-3">
+          <a href="business/<?= urlencode($biz['slug']) ?>" class="btn btn-sm btn-orange w-100 py-2">View Details</a>
+        </div>
       </div>
-    <?php endif; ?>
+    </div>
+    <?php endforeach; ?>
   </div>
+</div>
+
 </main>
 
 <?php include 'includes/footer.php'; ?>
