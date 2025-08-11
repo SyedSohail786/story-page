@@ -195,7 +195,7 @@ $services = $pdo->query("SELECT * FROM services ORDER BY id DESC")->fetchAll();
               <li class="mb-2"><strong>Email:</strong> <?= htmlspecialchars($biz['email']) ?></li>
             <?php endif; ?>
             <?php if ($biz['website']): ?>
-              <li class="mb-2"><strong>Website:</strong> <a href="<?= htmlspecialchars(string: $biz['website']) ?>" target="_blank">Visit Site</a></li>
+              <li class="mb-2"><strong>Website:</strong> <a target="_blank" href="<?= htmlspecialchars(string: $biz['website']) ?>" >Visit Site</a></li>
             <?php endif; ?>
           </ul>
         </div>

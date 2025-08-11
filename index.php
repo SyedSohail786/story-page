@@ -265,7 +265,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
 
   <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3" id="latestStories">
     <?php foreach ($latest as $i => $s): ?>
-    <div class="col latest-card <?= $i >= 8 ? 'd-none' : '' ?>">
+    <div class="col latest-card <?= $i >= 4 ? 'd-none' : '' ?>">
       <div class="card h-100 border-0 shadow-sm story-card">
         <div class="position-relative overflow-hidden" style="height: 180px;">
           <img src="<?= $s['thumbnail'] ?>" class="card-img-top h-100 w-100"
@@ -323,7 +323,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
 
   <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3" id="popularStories">
     <?php foreach ($popular as $i => $s): ?>
-    <div class="col popular-card <?= $i >= 8 ? 'd-none' : '' ?>">
+    <div class="col popular-card <?= $i >= 4 ? 'd-none' : '' ?>">
       <div class="card h-100 border-0 shadow-sm story-card">
         <div class="position-relative overflow-hidden" style="height: 180px;">
           <img src="<?= $s['thumbnail'] ?>" class="card-img-top h-100 w-100"
@@ -363,7 +363,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
   <!-- Businesses -->
   <?php
   // Fetch businesses
-  $businessList = $pdo->query("SELECT * FROM businesses ORDER BY created_at DESC LIMIT 8")->fetchAll();
+  $businessList = $pdo->query("SELECT * FROM businesses ORDER BY created_at DESC LIMIT 4")->fetchAll();
   ?>
   <div class="container my-5 p-0">
   <div class="d-flex justify-content-between align-items-center mb-4">
@@ -396,7 +396,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
   <!-- Upcoming Events -->
   <?php
   // Fetch upcoming events (datetime greater than now)
-  $events = $pdo->prepare("SELECT * FROM events WHERE event_datetime >= NOW() ORDER BY event_datetime ASC LIMIT 8");
+  $events = $pdo->prepare("SELECT * FROM events WHERE event_datetime >= NOW() ORDER BY event_datetime ASC LIMIT 4");
   $events->execute();
   $upcoming = $events->fetchAll();
   ?>
