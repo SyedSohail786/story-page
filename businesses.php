@@ -194,6 +194,118 @@ include 'includes/header.php';
 </main>
 
 <?php include 'includes/footer.php'; ?>
+
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+  }
+  
+  .navbar {
+    transition: all 0.3s ease;
+  }
+  
+  .navbar.scrolled {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    background: rgba(253, 126, 20, 0.95) !important;
+    backdrop-filter: blur(10px);
+  }
+  
+  .nav-link {
+    position: relative;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    margin: 0 2px;
+  }
+  
+  .nav-link:hover {
+    background-color: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+  }
+  
+  .nav-link.active {
+    background-color: rgba(255,255,255,0.2);
+    font-weight: 600;
+  }
+  
+  .nav-link.active:before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 3px;
+    background-color: white;
+    border-radius: 3px;
+  }
+  
+  .bg-orange {
+    background-color: #fd7e14 !important;
+  }
+  
+  .btn-orange {
+    background-color: #fd7e14;
+    color: white;
+  }
+  
+  .btn-orange:hover {
+    background-color: #e67300;
+    color: white;
+  }
+  
+  .btn-outline-orange {
+    border-color: #fd7e14;
+    color: #fd7e14;
+  }
+  
+  .btn-outline-orange:hover {
+    background-color: #fd7e14;
+    color: white;
+  }
+  
+  .story-card {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .story-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+  
+  .card-img-overlay .badge {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .story-card:hover .card-img-overlay .badge {
+    opacity: 1;
+  }
+  
+  .text-truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  @media (max-width: 992px) {
+    .nav-link {
+      margin: 2px 0;
+      padding: 8px 12px !important;
+    }
+    
+    .nav-link.active:before {
+      display: none;
+    }
+  }
+</style>
 <script src="assets/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
