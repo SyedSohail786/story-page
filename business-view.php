@@ -1,17 +1,29 @@
 <?php
 require_once 'includes/db.php';
+
 $slug = $_GET['slug'] ?? '';
 $stmt = $pdo->prepare("SELECT * FROM businesses WHERE slug = ?");
 $stmt->execute([$slug]);
 $biz = $stmt->fetch();
-if (!$biz) { header("HTTP/1.0 404 Not Found"); exit; }
+
+if (!$biz) { 
+    header("HTTP/1.0 404 Not Found");
+    exit;
+}
 
 $metaTitle = htmlspecialchars($biz['seo_title'] ?: $biz['name']);
 $metaDesc  = htmlspecialchars($biz['meta_description'] ?: substr(strip_tags($biz['description']), 0, 150));
 
+// Increment views right here
+$pdo->prepare("UPDATE businesses SET views = views + 1 WHERE id = ?")
+    ->execute([$biz['id']]);
+
 // Fetch related services
 $services = $pdo->query("SELECT * FROM services ORDER BY id DESC")->fetchAll();
 ?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

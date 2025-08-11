@@ -360,14 +360,14 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
   <?php endif; ?>
 </div>
 
-  <!-- Businesses -->
-  <?php
-  // Fetch businesses
-  $businessList = $pdo->query("SELECT * FROM businesses ORDER BY created_at DESC LIMIT 4")->fetchAll();
-  ?>
-  <div class="container my-5 p-0">
+<!-- Businesses -->
+<?php
+// Fetch businesses by most viewed
+$businessList = $pdo->query("SELECT * FROM businesses ORDER BY views DESC LIMIT 4")->fetchAll();
+?>
+<div class="container my-5 p-0">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0" style="color: #fd7e14;">Businesses</h2>
+    <h2 class="mb-0" style="color: #fd7e14;">Top Businesses</h2>
     <a href="businesses.php" class="btn btn-outline-orange btn-sm">View All
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-1" viewBox="0 0 16 16">
          <path fill-rule="evenodd"
@@ -376,22 +376,25 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
     </a>
   </div>
   <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
-    <?php foreach ($businessList as $biz): ?>
+    <?php $rank = 1; foreach ($businessList as $biz): ?>
     <div class="col">
       <div class="card h-100 border-0 shadow-sm">
+        <div class="position-absolute bg-orange text-white px-2 py-1 rounded-end" style="top:10px; left:0; font-size: 0.8rem;">
+          #<?= $rank++ ?>
+        </div>
         <img src="<?= htmlspecialchars($biz['image']) ?>" class="card-img-top" style="height: 180px; object-fit: cover;">
         <div class="card-body p-3">
           <h5 class="card-title fs-6 mb-1"><?= htmlspecialchars($biz['name']) ?></h5>
         </div>
         <div class="card-footer bg-transparent border-0 pt-0 px-3 pb-3">
-          <a href="business/<?= urlencode($biz['slug']) ?>" class="btn btn-sm btn-orange w-100 py-2">View Details 
-          </a>
+          <a href="business/<?= urlencode($biz['slug']) ?>" class="btn btn-sm btn-orange w-100 py-2">View Details</a>
         </div>
       </div>
     </div>
     <?php endforeach; ?>
   </div>
 </div>
+
 
   <!-- Upcoming Events -->
   <?php
